@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building with AI Coding Assistants — Workshop Materials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F1E6;
+    --paper-alt: #FBF7EF;
+    --white: #FFFDF8;
+    --ink: #2A2521;
+    --ink-soft: #6B6156;
+    --ink-faint: #9A8F7F;
+    --line: #E4D9C7;
+    --terracotta: #C1592A;
+    --terracotta-deep: #9E4620;
+    --terracotta-soft: #F0D3C2;
+    --teal: #35706A;
+    --teal-deep: #244E4A;
+    --teal-soft: #D6E6E2;
+    --gold: #C9932F;
+    --gold-soft: #F5E4C3;
+    --radius: 14px;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Karla", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 6% 4%, rgba(193,89,42,0.06), transparent 34%),
+      radial-gradient(circle at 96% 92%, rgba(53,112,106,0.07), transparent 38%);
+    background-attachment: fixed;
+    font-family: var(--font-body);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 56px 26px 80px; }
+
+  /* ---------- masthead ---------- */
+  header.masthead { margin-bottom: 40px; }
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    background: var(--teal-soft);
+    padding: 0.45em 0.95em;
+    border-radius: 999px;
+    margin-bottom: 1.1em;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 5.4vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.3em 0;
+  }
+  h1 .accent { color: var(--terracotta); font-style: italic; }
+  .standfirst {
+    font-size: clamp(15px, 1.9vw, 19px);
+    color: var(--ink-soft);
+    max-width: 40em;
+    margin: 0 0 1.4em 0;
+  }
+  .masthead-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em 1.8em;
+    padding-top: 0.9em;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+  .masthead-meta strong { color: var(--teal-deep); font-weight: 600; }
+
+  /* ---------- section headings ---------- */
+  h2 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta-deep);
+    font-weight: 600;
+    margin: 44px 0 14px 0;
+  }
+
+  /* ---------- start-here callout ---------- */
+  .start-here {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2em;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--gold-soft);
+    border: 1px solid #E6CE9E;
+    border-radius: var(--radius);
+    padding: 1.15em 1.4em;
+  }
+  .start-here .sh-text { max-width: 46em; }
+  .start-here .sh-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 19px;
+    margin-bottom: 0.2em;
+  }
+  .start-here p { margin: 0; font-size: 14.5px; color: #4A3D22; }
+
+  /* ---------- day cards ---------- */
+  .day-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.3em 1.5em;
+    margin-bottom: 1em;
+    border-top: 4px solid var(--line);
+  }
+  .day-card.d1 { border-top-color: var(--teal); }
+  .day-card.d2 { border-top-color: var(--terracotta); }
+  .day-card.d3 { border-top-color: var(--gold); }
+  .day-card.d4 { border-top-color: var(--teal-deep); }
+
+  .day-head { display: flex; align-items: baseline; gap: 0.75em; flex-wrap: wrap; }
+  .day-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--teal);
+    padding: 0.3em 0.7em;
+    border-radius: 999px;
+  }
+  .d2 .day-tag { background: var(--terracotta); }
+  .d3 .day-tag { background: var(--gold); }
+  .d4 .day-tag { background: var(--teal-deep); }
+  .day-title { font-family: var(--font-display); font-weight: 600; font-size: 23px; }
+  .day-note { font-size: 14.5px; color: var(--ink-soft); margin: 0.35em 0 0.9em 0; max-width: 52em; }
+
+  .link-row { display: flex; flex-wrap: wrap; gap: 0.55em; margin-bottom: 0.9em; }
+  a.btn {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--teal-deep);
+    background: #EDF6F4;
+    border: 1px solid var(--teal-soft);
+    padding: 0.5em 0.85em;
+    border-radius: 8px;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  a.btn:hover { background: var(--teal-soft); transform: translateY(-1px); }
+  a.btn.primary { color: var(--terracotta-deep); background: #FDF2EA; border-color: var(--terracotta-soft); }
+  a.btn.primary:hover { background: var(--terracotta-soft); }
+
+  .files-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.45em;
+    padding-top: 0.7em;
+    border-top: 1px solid var(--line);
+  }
+  ul.files { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.3em 1.4em; }
+  ul.files li { font-size: 13.5px; color: var(--ink-soft); padding: 0.15em 0; }
+  ul.files a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+  ul.files a:hover { border-bottom-color: var(--terracotta); color: var(--terracotta-deep); }
+  ul.files .what { color: var(--ink-faint); }
+
+  /* ---------- how to use ---------- */
+  .how {
+    background: var(--paper-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.2em 1.5em;
+  }
+  .how ul { margin: 0; padding-left: 1.2em; }
+  .how li { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 0.4em; }
+  .how li:last-child { margin-bottom: 0; }
+  .how strong { color: var(--ink); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: #FDF2EA;
+    border: 1px solid var(--terracotta-soft);
+    border-radius: 5px;
+    padding: 0.1em 0.35em;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6em;
+  }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 36px 18px 60px; }
+    ul.files { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Capacity Building Workshop on AI</div>
+    <h1>Building with <span class="accent">AI</span> Coding Assistants</h1>
+    <p class="standfirst">Everything for the four days in one place — slides, student guides, and every file you are asked to create. All of it works offline: open any link in a browser, no internet needed except to talk to the AI itself.</p>
+    <div class="masthead-meta">
+      <span><strong>Programme</strong> 4 days × 2 hours</span>
+      <span><strong>Tooling</strong> OpenCode + free Gemini API key</span>
+      <span><strong>Cost</strong> free tier throughout</span>
+      <span><strong>Facilitator</strong> Kalpa Senanayake</span>
+    </div>
+  </header>
+
+  <h2>Start here — before Day 2</h2>
+  <div class="start-here">
+    <div class="sh-text">
+      <div class="sh-title">Pre-workshop setup</div>
+      <p>Install Node.js and OpenCode, and connect a free Gemini key — with a screenshot for every step. Doing this before Day 2 saves the room twenty minutes. If it doesn't work, don't worry: we do it together on Day 2.</p>
+    </div>
+    <a class="btn primary" href="connecting-opencode/pre-workshop-setup.html">Open the setup guide →</a>
+  </div>
+
+  <h2>The four days</h2>
+
+  <section class="day-card d1">
+    <div class="day-head">
+      <span class="day-tag">Day 1</span>
+      <span class="day-title">Foundations</span>
+    </div>
+    <p class="day-note">What AI actually is, what a coding agent actually does, and the words you need for the rest of the week. Watch and understand — no laptops needed.</p>
+    <div class="link-row">
+      <a class="btn primary" href="day1/day1-slides.html">Slides</a>
+      <a class="btn" href="day1/day1-student-guide.html">Student guide</a>
+    </div>
+    <div class="files-label">Also in this folder</div>
+    <ul class="files">
+      <li><a href="day1/workshop-outline.png">workshop-outline.png</a> <span class="what">— the full four-day outline, one page</span></li>
+    </ul>
+  </section>
+
+  <section class="day-card d2">
+    <div class="day-head">
+      <span class="day-tag">Day 2</span>
+      <span class="day-title">Hands On</span>
+    </div>
+    <p class="day-note">Set up your own machine, then teach your agent how your projects work — AGENTS.md, your first command, your first skills. Every file you build today is written out in full in Section 9 of the guide.</p>
+    <div class="link-row">
+      <a class="btn primary" href="day2/day2-slides.html">Slides</a>
+      <a class="btn" href="day2/day2-student-guide.html">Student guide</a>
+    </div>
+    <div class="files-label">Also in this folder</div>
+    <ul class="files">
+      <li><a href="day2/course-outline.md">course-outline.md</a> <span class="what">— the <code>/course-outline</code> command</span></li>
+    </ul>
+  </section>
+
+  <section class="day-card d3">
+    <div class="day-head">
+      <span class="day-tag">Day 3</span>
+      <span class="day-title">Context &amp; Many Hands</span>
+    </div>
+    <p class="day-note">Control what your agent knows, then split a real build across several agents — the Sunrise Bakery landing page. All six prompts are in Section 6 of the guide.</p>
+    <div class="link-row">
+      <a class="btn primary" href="day3/day3-slides.html">Slides</a>
+      <a class="btn" href="day3/day3-student-guide.html">Student guide</a>
+    </div>
+    <div class="files-label">Also in this folder</div>
+    <ul class="files">
+      <li><a href="day3/AGENTS.md">AGENTS.md</a> <span class="what">— the bakery project rules</span></li>
+      <li><a href="day3/idea-refine/SKILL.md">idea-refine/SKILL.md</a> <span class="what">— simple version, from Day 2</span></li>
+      <li><a href="day3/write-prd/SKILL.md">write-prd/SKILL.md</a> <span class="what">— simple version, from Day 2</span></li>
+      <li><a href="day3/planning-and-task-breakdown/SKILL.md">planning-and-task-breakdown/SKILL.md</a> <span class="what">— simple version, from Day 2</span></li>
+    </ul>
+  </section>
+
+  <section class="day-card d4">
+    <div class="day-head">
+      <span class="day-tag">Day 4</span>
+      <span class="day-title">Capstone Build</span>
+    </div>
+    <p class="day-note">A complete working application with a database — the Sunrise Bakery Cash-Flow Tracker — start to finish in one session. Copy the three skill folders below into <code>.opencode/skills/</code> before you begin.</p>
+    <div class="link-row">
+      <a class="btn primary" href="day4/day4-slides.html">Slides</a>
+      <a class="btn" href="day4/day4-student-guide.html">Student guide</a>
+      <a class="btn" href="day4/cash-flow-tracker-prd.md">The shared specification</a>
+    </div>
+    <div class="files-label">Also in this folder</div>
+    <ul class="files">
+      <li><a href="day4/cash-flow-tracker-prd.md">cash-flow-tracker-prd.md</a> <span class="what">— save as <code>docs/ideas/cash-flow-tracker.md</code></span></li>
+      <li><a href="day4/AGENTS.md">AGENTS.md</a> <span class="what">— the project rules</span></li>
+      <li><a href="day4/tasks/todo.md">tasks/todo.md</a> <span class="what">— the working checklist</span></li>
+      <li><a href="day4/tasks/plan.md">tasks/plan.md</a> <span class="what">— full detail behind each task</span></li>
+      <li><a href="day4/idea-refine/SKILL.md">idea-refine/SKILL.md</a> <span class="what">— full version</span></li>
+      <li><a href="day4/planning-and-task-breakdown/SKILL.md">planning-and-task-breakdown/SKILL.md</a> <span class="what">— full version</span></li>
+      <li><a href="day4/incremental-implementation/SKILL.md">incremental-implementation/SKILL.md</a> <span class="what">— new on Day 4</span></li>
+    </ul>
+  </section>
+
+  <h2>How to use these materials</h2>
+  <div class="how">
+    <ul>
+      <li><strong>Slides</strong> open in any browser. Use <code>←</code> and <code>→</code> to move, <code>f</code> for fullscreen, <code>n</code> for speaker notes.</li>
+      <li><strong>Student guides</strong> repeat everything said in the room, plus a command reference and a "when something goes wrong" table. Every one of them prints cleanly if you'd rather have paper.</li>
+      <li><strong>The <code>.md</code> files</strong> are ordinary text. Open one, select all, and paste it to your agent — or ask your agent to write it for you, which is what we do in the sessions.</li>
+      <li><strong>Nothing here expires.</strong> The tools are free and the files are yours. Everything keeps working on Monday morning, and on your students' machines too.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <span>Building with AI Coding Assistants · 4 days × 2 hours</span>
+    <span>Facilitator — Kalpa Senanayake</span>
+  </footer>
+
+</div>
+</body>
+</html>

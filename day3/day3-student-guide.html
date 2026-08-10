@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 Student Guide — Building with AI Coding Assistants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F1E6;
+    --paper-alt: #FBF7EF;
+    --white: #FFFDF8;
+    --ink: #2A2521;
+    --ink-soft: #6B6156;
+    --ink-faint: #9A8F7F;
+    --line: #E4D9C7;
+    --terracotta: #C1592A;
+    --terracotta-deep: #9E4620;
+    --terracotta-soft: #F0D3C2;
+    --teal: #35706A;
+    --teal-deep: #244E4A;
+    --teal-soft: #D6E6E2;
+    --gold: #C9932F;
+    --gold-soft: #F5E4C3;
+    --gold-ink: #4A3D22;
+    --radius: 14px;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Karla", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--font-body); line-height: 1.62; font-size: 16px;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 26px 120px; }
+
+  /* ===== MASTHEAD ===== */
+  .masthead {
+    background: var(--teal-deep); color: var(--paper-alt);
+    padding: 58px 26px 68px;
+    background-image: radial-gradient(circle at 85% 10%, rgba(193,89,42,0.25), transparent 45%);
+  }
+  .masthead-inner { max-width: 820px; margin: 0 auto; }
+  .masthead .eyebrow {
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--terracotta-soft);
+    background: rgba(193,89,42,0.18); display: inline-block;
+    padding: 0.4em 0.9em; border-radius: 999px; margin-bottom: 1.1em;
+  }
+  .masthead h1 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(30px, 5vw, 46px); line-height: 1.08;
+    margin: 0 0 0.32em 0; letter-spacing: -0.01em;
+  }
+  .masthead .sub { font-size: 17px; color: var(--teal-soft); max-width: 36em; margin: 0; }
+  .fields-row {
+    display: flex; gap: 2.4em; margin-top: 2em;
+    font-family: var(--font-mono); font-size: 12.5px; color: rgba(251,247,239,0.65);
+  }
+  .fields-row .field-line {
+    border-bottom: 1px dashed rgba(251,247,239,0.4);
+    padding-bottom: 3px; min-width: 170px; display: inline-block;
+  }
+
+  /* ===== HOW TO USE ===== */
+  .howto {
+    margin-top: -36px; background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px 26px;
+    box-shadow: 0 14px 34px rgba(42,37,33,0.1);
+  }
+  .howto h2 {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--terracotta-deep); margin: 0 0 0.8em 0;
+  }
+  .howto p { margin: 0 0 0.7em 0; font-size: 15px; }
+  .howto p:last-child { margin-bottom: 0; }
+
+  /* ===== AGENDA ===== */
+  .agenda {
+    margin-top: 26px; background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px 24px;
+  }
+  .agenda h2 {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--terracotta-deep); margin: 0 0 0.9em 0;
+  }
+  .agenda-row {
+    display: flex; gap: 14px; padding: 7px 0;
+    border-bottom: 1px solid var(--line); font-size: 14.5px;
+  }
+  .agenda-row:last-child { border-bottom: none; }
+  .agenda-time { font-family: var(--font-mono); color: var(--ink-faint); min-width: 52px; flex-shrink: 0; }
+  .part-tag {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--teal-deep);
+    background: var(--teal-soft); padding: 1px 7px; border-radius: 999px; margin-right: 8px;
+  }
+
+  /* ===== SECTIONS ===== */
+  section.block { margin-top: 60px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .section-index { font-family: var(--font-display); font-size: 15px; color: var(--terracotta); font-weight: 600; }
+  h2.block-title {
+    font-family: var(--font-display); font-size: clamp(25px, 3.6vw, 34px);
+    font-weight: 600; margin: 0; letter-spacing: -0.01em; line-height: 1.15;
+  }
+  .block-lede { color: var(--ink-soft); font-size: 16px; margin: 8px 0 24px 0; max-width: 46em; }
+  h3.sub-title {
+    font-family: var(--font-display); font-size: 20.5px; font-weight: 600;
+    margin: 34px 0 10px 0; line-height: 1.25;
+  }
+  h4.mini-title {
+    font-family: var(--font-body); font-size: 16px; font-weight: 700;
+    margin: 22px 0 8px 0; color: var(--ink);
+  }
+  p { font-size: 16px; margin: 0 0 15px 0; }
+  strong { color: var(--ink); font-weight: 700; }
+  ul.plain, ol.plain { padding-left: 1.35em; margin: 0 0 16px 0; }
+  ul.plain li, ol.plain li { margin-bottom: 9px; }
+
+  code.inline {
+    font-family: var(--font-mono); font-size: 0.88em;
+    background: #EFE7D8; border: 1px solid var(--line);
+    padding: 0.1em 0.42em; border-radius: 5px; color: var(--terracotta-deep);
+    overflow-wrap: anywhere;
+  }
+
+  /* ===== STEP BLOCK ===== */
+  .step {
+    background: var(--white); border: 1px solid var(--line);
+    border-left: 4px solid var(--terracotta);
+    border-radius: 11px; padding: 18px 22px; margin: 20px 0;
+  }
+  .step-head { display: flex; align-items: center; gap: 11px; margin-bottom: 11px; }
+  .step-num {
+    font-family: var(--font-mono); font-size: 11.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--terracotta); color: #fff;
+    padding: 0.3em 0.75em; border-radius: 999px; flex-shrink: 0;
+  }
+  .step-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+  .step p { font-size: 15.5px; }
+  .step p:last-child { margin-bottom: 0; }
+
+  /* ===== OS SPLIT ===== */
+  .os-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .os-col { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .os-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 12px; background: #EFE7D8; color: var(--ink-soft);
+  }
+  .os-col .cmd { margin: 0; border-radius: 0; }
+
+  .cmd {
+    font-family: var(--font-mono); background: #211C17; color: #FBF7EF;
+    padding: 13px 16px; border-radius: 9px; font-size: 13.5px;
+    line-height: 1.6; white-space: pre-wrap; margin: 12px 0; overflow-x: auto;
+  }
+  .cmd .prompt-sym { color: #8FC49A; }
+  .cmd .c { color: #9A8F7F; }
+  .cmd .k { color: #E8B79A; }
+
+  .expect {
+    display: flex; gap: 11px; align-items: flex-start;
+    margin: 12px 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft);
+  }
+  .expect-tag {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-deep); background: var(--teal-soft);
+    padding: 4px 9px; border-radius: 999px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  .checkpoint {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: 10px; padding: 13px 17px; margin: 16px 0;
+  }
+  .checkpoint .cp-tag {
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.09em; text-transform: uppercase; color: #8A6516;
+    flex-shrink: 0; padding-top: 2px;
+  }
+  .checkpoint p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--gold-ink); }
+
+  /* ===== FILE WINDOW ===== */
+  .device-window {
+    background: #211C17; border-radius: 11px; overflow: hidden;
+    box-shadow: 0 10px 24px rgba(42,37,33,0.22); margin: 16px 0;
+  }
+  .window-header {
+    display: flex; align-items: center; gap: 8px; padding: 0.55em 0.9em;
+    background: #16130F; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .window-dots { display: flex; gap: 5px; }
+  .window-dots span { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .window-dots span:nth-child(1) { background: #E0796B; }
+  .window-dots span:nth-child(2) { background: #E8C15E; }
+  .window-dots span:nth-child(3) { background: #7FB88F; }
+  .window-filename { font-family: var(--font-mono); font-size: 12px; color: var(--paper-alt); opacity: 0.8; }
+  .window-body {
+    padding: 14px 18px; font-family: var(--font-mono); font-size: 13.5px;
+    line-height: 1.65; color: var(--paper-alt); white-space: pre-wrap; overflow-x: auto;
+  }
+  .window-body .k { color: #E8B79A; }
+  .window-body .c { color: #9A8F7F; }
+  .window-body .prompt { color: #8FC49A; }
+  .window-body .out { color: var(--paper-alt); opacity: 0.84; }
+
+  /* ===== ANNOTATIONS ===== */
+  ol.anno-list { list-style: none; margin: 0 0 18px 0; padding: 0; }
+  ol.anno-list li { display: flex; gap: 12px; margin-bottom: 11px; font-size: 15px; line-height: 1.5; }
+  .anno-num {
+    flex-shrink: 0; background: var(--terracotta); color: #fff;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    width: 24px; height: 24px; line-height: 24px;
+    border-radius: 50%; text-align: center; margin-top: 2px;
+  }
+  ol.anno-list strong { display: block; }
+
+  /* ===== COMPARE ===== */
+  .compare-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 22px 0; }
+  .compare-box { border-radius: 11px; padding: 15px 17px; }
+  .compare-box.weak { background: #FBEDE6; border: 1px solid var(--terracotta-soft); }
+  .compare-box.strong { background: #EBF3F1; border: 1px solid var(--teal-soft); }
+  .compare-box .tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700; display: block; margin-bottom: 8px;
+  }
+  .compare-box.weak .tag { color: var(--terracotta-deep); }
+  .compare-box.strong .tag { color: var(--teal-deep); }
+  .compare-box p { font-size: 14.5px; margin: 0 0 8px 0; line-height: 1.5; }
+  .compare-box p:last-child { margin-bottom: 0; }
+  .compare-box p.mono { font-family: var(--font-mono); font-size: 13.5px; }
+
+  /* ===== ANALOGY / CALLOUT / WARN ===== */
+  .analogy {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: var(--radius); padding: 15px 18px; margin: 18px 0;
+  }
+  .analogy .analogy-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; font-weight: 700; color: #8A6516;
+    flex-shrink: 0; padding-top: 3px;
+  }
+  .analogy p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--gold-ink); }
+
+  .callout {
+    background: var(--teal-deep); color: var(--paper-alt);
+    border-radius: var(--radius); padding: 18px 22px; margin: 22px 0;
+  }
+  .callout .callout-tag {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--terracotta-soft); margin-bottom: 7px; display: block;
+  }
+  .callout p { margin: 0 0 10px 0; color: var(--paper-alt); font-size: 15.5px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .warn-box {
+    background: #FBEDE6; border: 1px solid var(--terracotta-soft);
+    border-left: 4px solid var(--terracotta); border-radius: 10px;
+    padding: 15px 18px; margin: 20px 0;
+  }
+  .warn-box .warn-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; font-weight: 700; color: var(--terracotta-deep);
+    display: block; margin-bottom: 6px;
+  }
+  .warn-box p { margin: 0; font-size: 15px; }
+
+  /* ===== TABLES ===== */
+  .table-scroll { overflow-x: auto; margin: 18px 0 22px 0; }
+  table.guide-table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 480px; }
+  table.guide-table th {
+    font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 10.5px; color: var(--ink-faint); text-align: left;
+    padding: 9px 12px; border-bottom: 2px solid var(--line); white-space: nowrap;
+  }
+  table.guide-table td {
+    padding: 11px 12px; border-bottom: 1px solid var(--line);
+    vertical-align: top; line-height: 1.48;
+  }
+  table.guide-table tr:last-child td { border-bottom: none; }
+  table.guide-table td.term { font-weight: 700; white-space: nowrap; }
+  table.guide-table td.mono, table.guide-table td .mono {
+    font-family: var(--font-mono); font-size: 13px; color: var(--terracotta-deep);
+  }
+  table.guide-table tbody tr:nth-child(even) { background: rgba(255,253,248,0.6); }
+
+  /* ===== CHECKLIST ===== */
+  ul.checklist { list-style: none; padding: 0; margin: 16px 0 20px 0; }
+  ul.checklist li {
+    position: relative; padding-left: 34px; margin-bottom: 11px;
+    font-size: 15.5px; line-height: 1.5;
+  }
+  ul.checklist li::before {
+    content: ""; position: absolute; left: 0; top: 2px;
+    width: 19px; height: 19px; border: 2px solid var(--teal);
+    border-radius: 5px; background: var(--white);
+  }
+
+  hr.divider { border: none; border-top: 1px solid var(--line); margin: 52px 0; }
+  footer.page-footer {
+    text-align: center; font-family: var(--font-mono); font-size: 11.5px;
+    color: var(--ink-faint); margin-top: 64px;
+  }
+
+  @media (max-width: 700px) {
+    .compare-pair, .os-split { grid-template-columns: 1fr; }
+    .fields-row { flex-direction: column; gap: 10px; }
+    .masthead { padding: 42px 18px 54px; }
+    .wrap { padding: 0 17px 90px; }
+    .howto { margin-top: -26px; padding: 18px; }
+  }
+
+  @media print {
+    body { background: white; font-size: 11.5pt; }
+    .masthead, .callout, .analogy, .warn-box, .compare-box, .device-window, .cmd, .step, .checkpoint {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    section.block, .step, .device-window { page-break-inside: avoid; }
+    hr.divider { margin: 30px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <span class="eyebrow">Day 3 of 4 · Student Guide</span>
+    <h1>Context &amp; Many Hands</h1>
+    <p class="sub">Control what your agent knows — then split a real build across several agents working together. Every prompt you'll type today is written out here in full.</p>
+    <div class="fields-row">
+      <span>Name: <span class="field-line">&nbsp;</span></span>
+      <span>Date: <span class="field-line">&nbsp;</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="howto">
+    <h2>How to use this guide</h2>
+    <p><strong>This is your safety net.</strong> Every prompt shown on screen today is written out here. If you fall behind, find your place and carry on. If you get badly stuck, raise your hand — the room will wait.</p>
+    <p><strong>Today has two halves.</strong> The first is understanding — why the same question gets a good answer one day and a poor one the next. The second is building: a real web page, made by three agents working together.</p>
+    <p><strong>Keep this after today.</strong> Section 6 lets you rebuild the whole page from scratch at home, and Section 7 covers what to do when something goes wrong.</p>
+  </div>
+
+  <div class="agenda">
+    <h2>Today's flow — 2 hours</h2>
+    <div class="agenda-row"><span class="agenda-time">0:00</span><span>Welcome, recap of Day 2, and how today works</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:08</span><span><span class="part-tag">Part 1</span>Context engineering — what your agent knows, and how to control it</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:36</span><span><span class="part-tag">Part 2</span>Many hands — working with several agents at once</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:45</span><span><span class="part-tag">Part 3</span>Build it — a landing page for Sunrise Bakery</span></div>
+    <div class="agenda-row"><span class="agenda-time">1:37</span><span>Recap, and a look at Day 4</span></div>
+  </div>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 1</span></div>
+    <h2 class="block-title">Context Engineering</h2>
+    <p class="block-lede">A grand name for a simple idea: deciding what your agent knows before it answers. This is the difference between an agent that feels clever and one that feels useless.</p>
+
+    <h3 class="sub-title">What context actually is</h3>
+    <p>Context is <strong>everything your agent can see at the moment you press Enter</strong>. Not everything it has ever read — everything in front of it, right now. It answers using that, and nothing else.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">What people assume</span>
+        <p>"It knows my project. I told it about the bakery an hour ago."</p>
+        <p>So they write short prompts, and wonder why the answers drift.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">What is actually true</span>
+        <p>It knows exactly what is in front of it: your message, your AGENTS.md, the files it has opened, and the conversation so far.</p>
+        <p>Anything outside that does not exist to it.</p>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">The mental model to break</span>
+      <p>Your agent does not <em>remember</em> like a person does. It <strong>re-reads</strong>. Everything else in this section follows from that one correction.</p>
+    </div>
+
+    <h3 class="sub-title">The four things that fill the context</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>What goes in</th><th>Who controls it</th></tr></thead>
+        <tbody>
+          <tr><td class="term">1. What you just typed</td><td>You — every time.</td></tr>
+          <tr><td class="term">2. Your AGENTS.md</td><td>You — written once, re-read before every task.</td></tr>
+          <tr><td class="term">3. Files it has opened</td><td>You, by naming which files you mean.</td></tr>
+          <tr><td class="term">4. The conversation so far</td><td>You, by choosing when to start fresh.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>You control all four. <strong>That is the whole of context engineering</strong> — the rest is just knowing when to use which.</p>
+
+    <h3 class="sub-title">Why the window runs out</h3>
+    <p>Remember tokens from Day 1? The context window holds a fixed number of them. Fill it up, and the oldest parts get pushed out to make room — which is exactly when an agent starts "forgetting" something you agreed earlier.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>When</th><th>What's happening</th><th>What you notice</th></tr></thead>
+        <tbody>
+          <tr><td class="term">Early in a chat</td><td>Plenty of room.</td><td>Answers feel sharp. It remembers everything.</td></tr>
+          <tr><td class="term">An hour later</td><td>The window is full of old messages.</td><td>Your important rule from earlier has been squeezed out.</td></tr>
+          <tr><td class="term">The symptom</td><td>Nothing is broken — the window is simply full.</td><td>It contradicts itself, forgets the file structure, or re-does work.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>You will meet this on Day 4. When you do, it is not a fault and it is not your mistake — it is a full window, and the fix is in the checklist below.</p>
+
+    <h3 class="sub-title">Weak context vs strong context</h3>
+    <p>Identical prompt — six words. The only difference is what the agent could see when it answered.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Weak — fresh session, nothing else</span>
+        <p class="mono">"add a contact section"</p>
+        <p><strong>What comes back:</strong> a contact form with name, email and message. Styled in a way that matches nothing. Saved wherever it felt like.</p>
+        <p>It guessed, because it had to.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Strong — AGENTS.md + the page open</span>
+        <p class="mono">"add a contact section"</p>
+        <p><strong>What comes back:</strong> a section matching the page's fonts and colours, with the bakery's real phone number, added to the existing file.</p>
+        <p>Same six words. Much better answer.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Technique 1 — write the rules down once</h3>
+    <p>You did this yesterday. <code class="inline">AGENTS.md</code> is the single highest-value thing you can put in context, because it is re-read before every task and never gets squeezed out.</p>
+    <p>One thing people miss: <strong>style is context too</strong>. Most assume AGENTS.md is only for technical facts, but telling it the tone you want genuinely changes the words and colours it chooses.</p>
+
+    <h3 class="sub-title">Technique 2 — point at the file you mean</h3>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Vague</span>
+        <p class="mono">"make the heading bigger"</p>
+        <p>Which heading, in which file? It may open three files looking, or change the wrong one.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Pointed</span>
+        <p class="mono">"in index.html, make the main heading at the top bigger"</p>
+        <p>One file, one change, checkable in seconds.</p>
+      </div>
+    </div>
+    <p>Four extra words, and it also keeps the window tidy — because the agent stops opening files speculatively.</p>
+
+    <h3 class="sub-title">Technique 3 — start fresh when you change job</h3>
+    <p>A long conversation carries everything before it. When you move to a new task, that old detail is no longer help — it is clutter competing for space.</p>
+    <ul class="plain">
+      <li><strong>Keep the same session</strong> while you're still on the same thing — building the page, then fixing the page, then styling the page. The history is genuinely useful.</li>
+      <li><strong>Start a new one</strong> when you switch to something unrelated — from the bakery page to marking a quiz. Type <code class="inline">/new</code> and begin clean.</li>
+    </ul>
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>Wiping the whiteboard between two lessons. Not because the last lesson was wrong — because leaving it up confuses the next one.</p>
+    </div>
+    <p>Starting a new session costs nothing and loses nothing from disk. Your files are all still there.</p>
+
+    <h3 class="sub-title">Technique 4 — give it enough, not everything</h3>
+    <p>The instinct once you understand context is to pour in as much as possible. That backfires: the important detail gets buried among the unimportant.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Too much</span>
+        <p>Pasting a whole textbook chapter, every file in the folder, and three previous lesson plans — to ask for one paragraph.</p>
+        <p>The one line that mattered gets lost.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Enough</span>
+        <p>The relevant file, the rule that applies, and a clear request.</p>
+        <p>Nothing competing for its attention.</p>
+      </div>
+    </div>
+    <p><strong>More context is not better context.</strong> Relevance beats volume every time.</p>
+
+    <h3 class="sub-title">The checklist — when an answer disappoints</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Ask yourself</th><th>The fix</th></tr></thead>
+        <tbody>
+          <tr><td>Did it know the rules of this project?</td><td>Put them in <code class="inline">AGENTS.md</code> — once, permanently.</td></tr>
+          <tr><td>Did it know which file I meant?</td><td>Name the file in your request.</td></tr>
+          <tr><td>Have we been talking for a long time?</td><td>Start fresh with <code class="inline">/new</code>.</td></tr>
+          <tr><td>Did I bury the important part?</td><td>Cut the rest. Give it what matters and nothing else.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <span class="callout-tag">The most useful sentence of the day</span>
+      <p>Nine times out of ten, <strong>a disappointing answer is a context problem, not a model problem</strong>. Work through these four questions before you conclude the tool isn't good enough.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 2 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 2</span></div>
+    <h2 class="block-title">Many Hands</h2>
+    <p class="block-lede">Once you understand context, sub-agents make sense — because the real reason to split a job is to give each part its own clean context.</p>
+
+    <h3 class="sub-title">You already have helpers — you don't build them</h3>
+    <p>OpenCode ships with these. You call one by typing <code class="inline">@</code> and its name, exactly like tagging a colleague in a message.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Helper</th><th>What it's for</th><th>What it may do</th></tr></thead>
+        <tbody>
+          <tr><td class="term">@explore</td><td>Searches your files and reports back.</td><td><strong>Read-only</strong> — it cannot change anything.</td></tr>
+          <tr><td class="term">@scout</td><td>Looks things up outside your project.</td><td>Read-only.</td></tr>
+          <tr><td class="term">@general</td><td>Takes on a whole piece of work on its own.</td><td>Full access.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="analogy">
+      <span class="analogy-tag">Why read-only matters</span>
+      <p>You can hand <code class="inline">@explore</code> a job with no risk at all. It can tell you what's wrong with your page, but it cannot touch it. We use exactly that as our reviewer in the build.</p>
+    </div>
+
+    <h3 class="sub-title">The real reason to split a job</h3>
+    <p>Sub-agents produce better work not because they are cleverer, but because <strong>each one gets its own clean context</strong> and only sees what its own job needs.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Helper</th><th>What it sees</th></tr></thead>
+        <tbody>
+          <tr><td class="term">Writes the words</td><td>The brief only.</td></tr>
+          <tr><td class="term">Builds the layout</td><td>The words and the rules — not the conversation about writing them.</td></tr>
+          <tr><td class="term">Checks the work</td><td>The finished page and the rules.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>Group work in your classroom. You don't give every group the whole project brief — you give each the part they need, then bring the pieces together yourself.</p>
+    </div>
+
+    <h3 class="sub-title">Keeping them aligned</h3>
+    <p>Three helpers working separately can easily produce three styles that don't match — formal words, playful layout, and a reviewer judging it against something else entirely.</p>
+    <p>There is one thing that keeps them aligned, and you already have it: <strong>every helper reads the same AGENTS.md before starting</strong>. Same stack, same tone, same rules. That is why we write it first in the build, before any helper is called.</p>
+
+    <h3 class="sub-title">When <em>not</em> to bother with helpers</h3>
+    <p>Splitting a job has a cost — you have to brief each helper and join the pieces up. For small work that cost is more than the benefit.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Don't split</span>
+        <p>"Fix this typo."<br>"Make the heading bigger."<br>"Add my phone number."</p>
+        <p>One agent, one message. Done.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Do split</span>
+        <p>Work with clearly different jobs inside it — writing versus building versus checking. Or when you want a reviewer who cannot change your work.</p>
+        <p>Worth the briefing.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 3 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 3</span></div>
+    <h2 class="block-title">Build It — Sunrise Bakery</h2>
+    <p class="block-lede">Six steps. A small family bakery with no website at all — customers only find them by walking past. They want one simple page they can send people to.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>The brief</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="term">What they sell</td><td>Bread, buns, and birthday cakes to order.</td></tr>
+          <tr><td class="term">Who visits</td><td>Neighbours, mostly on a phone.</td></tr>
+          <tr><td class="term">What they need</td><td>Opening hours, what's on offer, how to contact them.</td></tr>
+          <tr><td class="term">Tomorrow</td><td>We build the cash-flow tracker the owner uses behind the counter.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 1</span><span class="step-title">A folder, and the rules everyone follows</span></div>
+      <p>Start from the <code class="inline">my-agent</code> folder you made yesterday.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> mkdir bakery
+<span class="prompt-sym">&gt;</span> cd bakery
+<span class="prompt-sym">&gt;</span> opencode</div>
+      <p>Then, inside the agent, ask it to write the shared rules. Every helper will read this file.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> create an AGENTS.md for a one-page website for
+  Sunrise Bakery. Stack: one index.html and one
+  style.css, plain CSS, no frameworks, no JavaScript.
+  Style: warm, friendly, simple, big readable text.
+  Rules: keep all files in this folder, ask before
+  adding anything new.</div>
+      <div class="expect">
+        <span class="expect-tag">Check</span>
+        <span>Run <code class="inline">dir</code> or <code class="inline">ls</code> — you should be inside a <code class="inline">bakery</code> folder containing <code class="inline">AGENTS.md</code> and nothing else.</span>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">Don't skip the new folder</span>
+      <p>If you build the bakery inside yesterday's project, the agent picks up <em>yesterday's</em> AGENTS.md and the page comes out wrong in confusing ways. A fresh folder means fresh rules.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 2</span><span class="step-title">First helper — write the words</span></div>
+      <p>Notice we ask for <em>only the words</em>. No HTML yet. One job, one helper, one clean context.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> @general write the words for the Sunrise Bakery
+  page and save them in content.md. We need: a short
+  welcome, what we sell, opening hours, and how to
+  contact us. Warm and friendly. Words only — no HTML.</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A new <code class="inline">content.md</code> with real sentences in it. Read them — this is the bakery's voice being decided.</span>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">It invented the phone number</span>
+      <p>Expected, and a perfect live example of why context matters. The brief didn't include one, so it filled the gap. You'll replace it later — but notice that a thin brief produces invented detail every time.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 3</span><span class="step-title">Second helper — build the page around those words</span></div>
+      <p>This helper's context is different: it needs the words and the rules, but not the conversation about writing them.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> @general using the text in content.md, build
+  index.html and style.css for the Sunrise Bakery
+  page. Follow AGENTS.md. Make it work well on a
+  phone. Warm colours, big readable text.</div>
+      <div class="expect">
+        <span class="expect-tag">Check</span>
+        <span>Run <code class="inline">dir</code> or <code class="inline">ls</code> — you should now have four files: <code class="inline">AGENTS.md</code>, <code class="inline">content.md</code>, <code class="inline">index.html</code>, <code class="inline">style.css</code>.</span>
+      </div>
+      <p style="margin-top:12px;">You named the file — <strong>technique 2</strong> from this morning — so this helper never had to guess where the words were.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 4</span><span class="step-title">Open it in your browser</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> open index.html in my browser</div>
+      <div class="expect">
+        <span class="expect-tag">Or do it yourself</span>
+        <span>Find the <code class="inline">bakery</code> folder in your file manager and double-click <code class="inline">index.html</code>.</span>
+      </div>
+      <p style="margin-top:12px;">A real web page, on screen, that you described but never wrote. This is the first thing this week that a stranger could look at.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 5</span><span class="step-title">Third helper — a reviewer that cannot break anything</span></div>
+      <p>Here is where read-only earns its keep. <code class="inline">@explore</code> can read every file and tell you what's wrong, but it physically cannot change your page.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> @explore read index.html, style.css and
+  AGENTS.md, then tell me anything that breaks the
+  rules in AGENTS.md or looks wrong on a phone.
+  Just report — do not change anything.</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A short list of problems. Common ones: a framework crept in, text too small on a phone, or a section from <code class="inline">content.md</code> that never made it onto the page.</span>
+      </div>
+      <p style="margin-top:12px;"><strong>If the review finds nothing at all</strong>, it probably didn't really look. Ask it to check against each rule in AGENTS.md one at a time.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 6</span><span class="step-title">Hand the findings back to be fixed</span></div>
+      <p>The reviewer found the problems. The main agent fixes them — exactly how a real team works.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> fix everything on that list, then tell me
+  what you changed</div>
+      <p>Refresh the page in your browser, then check again:</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> @explore check it again</div>
+      <div class="expect">
+        <span class="expect-tag">Watch for</span>
+        <span>The second review should be shorter than the first. That gap is the whole value of having a reviewer.</span>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Make it yours</h3>
+    <p>Change whatever you like. Try one thing at a time and refresh the browser after each — that habit is what makes problems easy to find.</p>
+    <ul class="plain">
+      <li><strong>Make it real</strong> — "Change the opening hours to 6am–7pm and the phone number to my school's."</li>
+      <li><strong>Change the feel</strong> — "Make the colours cooler and more modern." Then ask for warm again and compare.</li>
+      <li><strong>Add something</strong> — "Add a section listing three cakes with prices." Watch it obey AGENTS.md while doing it.</li>
+    </ul>
+    <div class="callout">
+      <span class="callout-tag">The rule of the week, again</span>
+      <p>Don't start over. <strong>Say what's wrong</strong> and let it fix that one thing. You'll rely on this completely tomorrow.</p>
+    </div>
+
+    <h3 class="sub-title">What just happened, in order</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Step</th><th>Who did it</th><th>What it saw</th></tr></thead>
+        <tbody>
+          <tr><td>Set the rules</td><td class="term">You</td><td>The brief in your head.</td></tr>
+          <tr><td>Wrote the words</td><td class="term">@general</td><td>The brief and the rules.</td></tr>
+          <tr><td>Built the page</td><td class="term">@general</td><td>The words and the rules — not the writing conversation.</td></tr>
+          <tr><td>Reviewed it</td><td class="term">@explore</td><td>The finished files and the rules. Read-only.</td></tr>
+          <tr><td>Fixed it</td><td class="term">Main agent</td><td>The review findings.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Nobody saw more than their job required.</strong> That is the whole technique.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 5 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 5</span></div>
+    <h2 class="block-title">Command reference</h2>
+    <p class="block-lede">New today, on top of everything from Day 2.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Type this</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/new</td><td>Start a fresh session with an empty context. Nothing is lost from disk.</td></tr>
+          <tr><td class="mono">@general &lt;task&gt;</td><td>Hand a whole piece of work to a helper with full access.</td></tr>
+          <tr><td class="mono">@explore &lt;question&gt;</td><td>Ask a read-only helper to search and report. Cannot change files.</td></tr>
+          <tr><td class="mono">@scout &lt;question&gt;</td><td>Read-only helper for looking things up outside your project.</td></tr>
+          <tr><td class="mono">mkdir bakery</td><td>Make a new folder — same on Windows and Mac.</td></tr>
+          <tr><td class="mono">cd bakery</td><td>Go into it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 6 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 6</span></div>
+    <h2 class="block-title">Rebuild the whole page at home</h2>
+    <p class="block-lede">All six prompts in order, with nothing in between. Copy them one at a time — this is how you'd show a colleague, or run it with a class.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">the whole build, start to finish</span>
+      </div>
+      <div class="window-body"><span class="c">— in your terminal —</span>
+<span class="prompt">mkdir bakery</span>
+<span class="prompt">cd bakery</span>
+<span class="prompt">opencode</span>
+
+<span class="c">— 1. the shared rules —</span>
+<span class="out">create an AGENTS.md for a one-page website for Sunrise
+Bakery. Stack: one index.html and one style.css, plain
+CSS, no frameworks, no JavaScript. Style: warm, friendly,
+simple, big readable text. Rules: keep all files in this
+folder, ask before adding anything new.</span>
+
+<span class="c">— 2. the words —</span>
+<span class="out">@general write the words for the Sunrise Bakery page and
+save them in content.md. We need: a short welcome, what we
+sell, opening hours, and how to contact us. Warm and
+friendly. Words only — no HTML.</span>
+
+<span class="c">— 3. the page —</span>
+<span class="out">@general using the text in content.md, build index.html
+and style.css for the Sunrise Bakery page. Follow
+AGENTS.md. Make it work well on a phone. Warm colours,
+big readable text.</span>
+
+<span class="c">— 4. look at it —</span>
+<span class="out">open index.html in my browser</span>
+
+<span class="c">— 5. the review —</span>
+<span class="out">@explore read index.html, style.css and AGENTS.md, then
+tell me anything that breaks the rules in AGENTS.md or
+looks wrong on a phone. Just report — do not change
+anything.</span>
+
+<span class="c">— 6. the fix —</span>
+<span class="out">fix everything on that list, then tell me what you changed</span></div>
+    </div>
+
+    <h3 class="sub-title">The AGENTS.md, ready to copy</h3>
+    <p>If you'd rather write the file yourself than have the agent do it, this is the content. Save it as <code class="inline">AGENTS.md</code> at the top of your <code class="inline">bakery</code> folder.</p>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">AGENTS.md</span>
+      </div>
+      <div class="window-body"># Sunrise Bakery — website
+
+A one-page website for a small family bakery.
+
+## Stack
+
+- One page: `index.html`
+- Plain CSS in `style.css`
+- No frameworks, no JavaScript
+
+## Style
+
+- Warm, friendly, simple
+- Big readable text
+- Must work well on a phone
+
+## Rules
+
+- Keep all files in this folder
+- Ask before adding anything new
+- Plain language — a neighbour should understand every word</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 7 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 7</span></div>
+    <h2 class="block-title">When something goes wrong</h2>
+    <p class="block-lede">Today's problems are different from yesterday's — these are the ones that come up when building a page.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>What you see</th><th>What it means</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>The page looks plain — no colours or spacing</td>
+            <td>The HTML isn't loading the CSS file.</td>
+            <td>Ask: <em>"index.html doesn't seem to be using style.css — please check and fix the link."</em></td>
+          </tr>
+          <tr>
+            <td>My changes don't show in the browser</td>
+            <td>You're looking at the old version.</td>
+            <td>Refresh the page. If it still looks the same, hold <code class="inline">Shift</code> and refresh to force it.</td>
+          </tr>
+          <tr>
+            <td>It used a framework despite the rules</td>
+            <td>It didn't read, or didn't follow, AGENTS.md.</td>
+            <td>Say: <em>"AGENTS.md says no frameworks. Please redo this using plain CSS only."</em></td>
+          </tr>
+          <tr>
+            <td><code class="inline">@explore</code> found nothing wrong</td>
+            <td>It gave the files a shallow look.</td>
+            <td>Ask it to check against <strong>each rule in AGENTS.md one at a time</strong>.</td>
+          </tr>
+          <tr>
+            <td>A helper ignored the rules completely</td>
+            <td>You're probably in the wrong folder.</td>
+            <td>Run <code class="inline">dir</code> or <code class="inline">ls</code> — if you can't see AGENTS.md, you're not in the bakery folder.</td>
+          </tr>
+          <tr>
+            <td>It's forgotten what we agreed earlier</td>
+            <td>The context window is full.</td>
+            <td>Start fresh with <code class="inline">/new</code>. Your files are all still on disk.</td>
+          </tr>
+          <tr>
+            <td>The page won't open at all</td>
+            <td>Wrong file, or it was never created.</td>
+            <td>Run <code class="inline">dir</code> or <code class="inline">ls</code> and check <code class="inline">index.html</code> is actually there.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">The universal fix, still</span>
+      <p>For anything not on this list — <strong>copy the whole message and paste it to your agent</strong>, with a line saying what you were trying to do. You never have to work it out alone.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ RECAP ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Recap</span></div>
+    <h2 class="block-title">Three things to remember</h2>
+    <div class="recap-list">
+      <div class="recap-item"><span class="num">01</span><p>Context is everything your agent can see right now — and you control all four things that fill it.</p></div>
+      <div class="recap-item"><span class="num">02</span><p>A disappointing answer is usually a context problem. Work the four questions before blaming the tool.</p></div>
+      <div class="recap-item"><span class="num">03</span><p>Split a job when its parts are genuinely different — each helper works better with a small, clean context.</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><span class="section-index">Next</span></div>
+    <h2 class="block-title">Before Day 4</h2>
+    <ul class="checklist">
+      <li><strong>Leave everything installed as it is.</strong> Keep the <code class="inline">bakery</code> folder too — it's a good example to show your students.</li>
+      <li><strong>Bring your laptop and charger.</strong></li>
+      <li><strong>Optional:</strong> show the page to someone. Explaining how you built it is the fastest way to find out how well you understood it.</li>
+    </ul>
+    <div class="callout">
+      <span class="callout-tag">Tomorrow — the other side of the counter</span>
+      <p>Today you built what the bakery's customers see. Tomorrow you build what the owner uses: a <strong>cash-flow tracker</strong> that records money in and out, stores it in a database, and adds up the balance — using the same three skills you built on Day 2.</p>
+    </div>
+  </section>
+
+  <footer class="page-footer">Day 3 Student Guide — Building with AI Coding Assistants · Last updated 10 August 2026</footer>
+
+</div>
+
+</body>
+</html>

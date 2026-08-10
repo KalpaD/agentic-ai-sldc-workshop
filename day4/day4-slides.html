@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 — Building with AI Coding Assistants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F1E6;
+    --paper-alt: #FBF7EF;
+    --white: #FFFDF8;
+    --ink: #2A2521;
+    --ink-soft: #6B6156;
+    --ink-faint: #9A8F7F;
+    --line: #E4D9C7;
+    --terracotta: #C1592A;
+    --terracotta-deep: #9E4620;
+    --terracotta-soft: #F0D3C2;
+    --teal: #35706A;
+    --teal-deep: #244E4A;
+    --teal-soft: #D6E6E2;
+    --gold: #C9932F;
+    --gold-soft: #F5E4C3;
+    --gold-ink: #4A3D22;
+    --shadow: 0 20px 60px rgba(42,37,33,0.35);
+    --radius: 14px;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Karla", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0; background: var(--ink);
+    font-family: var(--font-body); color: var(--ink);
+  }
+
+  .stage {
+    position: fixed; inset: 0; background: #1C1815;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+
+  .deck {
+    position: relative; width: 100%; height: 100%;
+    max-width: calc(100vh * 16 / 9);
+    max-height: calc(100vw * 9 / 16);
+    aspect-ratio: 16 / 9;
+    background: var(--paper);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(193,89,42,0.05), transparent 40%),
+      radial-gradient(circle at 92% 88%, rgba(53,112,106,0.06), transparent 45%);
+  }
+
+  .slide {
+    position: absolute; inset: 0; display: none;
+    flex-direction: column; padding: 4.4% 5.6%; opacity: 0;
+  }
+  .slide.active { display: flex; opacity: 1; animation: rise 0.45s ease; }
+  .slide aside.notes { display: none; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 1.02vw, 13px);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--terracotta-deep); font-weight: 600; margin-bottom: 0.5em;
+  }
+  .kicker.teal { color: var(--teal-deep); }
+
+  h1.headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(21px, 3.35vw, 39px);
+    line-height: 1.12; margin: 0 0 0.24em 0; letter-spacing: -0.01em;
+  }
+
+  .lede {
+    font-size: clamp(12.5px, 1.35vw, 17px); line-height: 1.5;
+    color: var(--ink-soft); margin: 0 0 0.7em 0; max-width: 52em;
+  }
+  .body-copy {
+    font-size: clamp(13px, 1.4vw, 18px); line-height: 1.52;
+    color: var(--ink); max-width: 48em;
+  }
+
+  .slide-content {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; min-height: 0;
+  }
+
+  /* ===== TITLE ===== */
+  .slide-title { justify-content: center; align-items: flex-start; }
+  .slide-title .eyebrow {
+    font-family: var(--font-mono); font-size: clamp(12px, 1.2vw, 15px);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal-deep); background: var(--teal-soft);
+    padding: 0.4em 0.9em; border-radius: 999px; margin-bottom: 1.2em;
+  }
+  .slide-title h1 {
+    font-family: var(--font-display); font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700; line-height: 1.02; margin: 0 0 0.25em 0; letter-spacing: -0.02em;
+  }
+  .slide-title .accent-word { color: var(--terracotta); font-style: italic; }
+  .slide-title .deck-sub {
+    font-size: clamp(15px, 1.9vw, 24px); color: var(--ink-soft);
+    max-width: 34em; margin-bottom: 1.6em;
+  }
+  .slide-title .meta-row {
+    display: flex; gap: 2.4em; font-family: var(--font-mono);
+    font-size: clamp(12px, 1.1vw, 15px); color: var(--ink-faint);
+  }
+  .meta-row strong { color: var(--ink-soft); font-weight: 600; }
+
+  /* ===== SECTION BREAK ===== */
+  .slide-section {
+    justify-content: center; align-items: flex-start;
+    background: var(--teal-deep);
+    background-image:
+      radial-gradient(circle at 85% 20%, rgba(255,255,255,0.06), transparent 40%),
+      radial-gradient(circle at 10% 90%, rgba(193,89,42,0.15), transparent 45%);
+  }
+  .slide-section .section-num {
+    font-family: var(--font-mono); font-size: clamp(13px, 1.5vw, 19px);
+    color: var(--terracotta-soft); letter-spacing: 0.1em; margin-bottom: 0.6em;
+  }
+  .slide-section h1 {
+    font-family: var(--font-display); font-size: clamp(32px, 5.6vw, 64px);
+    color: var(--white); font-weight: 600; margin: 0; line-height: 1.05;
+  }
+  .slide-section .section-sub {
+    color: var(--teal-soft); font-size: clamp(13.5px, 1.55vw, 19px);
+    margin-top: 0.8em; max-width: 34em; line-height: 1.5;
+  }
+  .section-agenda { margin-top: 1.5em; display: flex; flex-wrap: wrap; gap: 0.6em; }
+  .section-agenda span {
+    font-family: var(--font-mono); font-size: clamp(10.5px, 1.05vw, 13px);
+    color: var(--paper-alt); background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 0.4em 0.85em; border-radius: 999px;
+  }
+
+  /* ===== DO NOW BLOCK ===== */
+  .do-now {
+    background: var(--white); border: 2px solid var(--terracotta);
+    border-radius: var(--radius); padding: 0.9em 1.15em; margin-top: 0.55em;
+  }
+  .do-now-head {
+    display: flex; align-items: center; gap: 0.65em; margin-bottom: 0.6em;
+  }
+  .do-now-badge {
+    font-family: var(--font-mono); font-size: clamp(9.5px, 0.95vw, 11.5px);
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--terracotta); color: #fff;
+    padding: 0.3em 0.75em; border-radius: 999px;
+  }
+  .do-now-title {
+    font-family: var(--font-body); font-weight: 700;
+    font-size: clamp(12.5px, 1.32vw, 16.5px); color: var(--ink);
+  }
+
+  .os-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7em; }
+  .os-col { border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+  .os-label {
+    font-family: var(--font-mono); font-size: clamp(9.5px, 0.95vw, 11.5px);
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.42em 0.75em; background: #EFE7D8; color: var(--ink-soft);
+  }
+  .os-col .cmd { margin: 0; border-radius: 0; }
+
+  .cmd {
+    font-family: var(--font-mono); background: #211C17; color: #FBF7EF;
+    padding: 0.72em 0.95em; border-radius: 9px;
+    font-size: clamp(11px, 1.2vw, 14.5px); line-height: 1.55;
+    white-space: pre-wrap; margin: 0.4em 0 0 0;
+  }
+  .cmd .prompt-sym { color: #8FC49A; }
+  .cmd .c { color: #9A8F7F; }
+  .cmd .k { color: #E8B79A; }
+
+  .expect {
+    display: flex; gap: 0.6em; align-items: flex-start;
+    margin-top: 0.6em; font-size: clamp(11px, 1.16vw, 14.5px);
+    line-height: 1.45; color: var(--ink-soft);
+  }
+  .expect-tag {
+    font-family: var(--font-mono); font-size: clamp(9px, 0.9vw, 11px);
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-deep); background: var(--teal-soft);
+    padding: 0.25em 0.6em; border-radius: 999px; flex-shrink: 0; margin-top: 0.1em;
+  }
+
+  .checkpoint {
+    display: flex; gap: 0.7em; align-items: center;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: 10px; padding: 0.65em 1em; margin-top: 0.6em;
+  }
+  .checkpoint .cp-tag {
+    font-family: var(--font-mono); font-size: clamp(9px, 0.92vw, 11.5px);
+    font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: #8A6516; flex-shrink: 0;
+  }
+  .checkpoint p {
+    margin: 0; font-size: clamp(11px, 1.18vw, 14.5px);
+    line-height: 1.45; color: var(--gold-ink);
+  }
+
+  /* ===== CARDS / LISTS ===== */
+  .card-row { display: grid; gap: 0.95em; margin-top: 0.85em; }
+  .card-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .card-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .card {
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 0.95em 1.1em;
+  }
+  .card .card-title {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(13.5px, 1.45vw, 18px); margin: 0 0 0.3em 0;
+  }
+  .card .card-body {
+    font-size: clamp(11.5px, 1.18vw, 14.5px); color: var(--ink-soft);
+    line-height: 1.45; margin: 0;
+  }
+  .card.accent-terracotta { border-color: var(--terracotta-soft); background: #FFF9F5; }
+  .card.accent-teal { border-color: var(--teal-soft); background: #F3FAF8; }
+
+  .idea-list { list-style: none; margin: 0.3em 0 0 0; padding: 0; }
+  .idea-list li {
+    position: relative; padding-left: 1.75em; margin-bottom: 0.6em;
+    font-size: clamp(12.5px, 1.35vw, 17px); line-height: 1.48;
+  }
+  .idea-list li::before {
+    content: ""; position: absolute; left: 0; top: 0.5em;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--terracotta);
+  }
+  .idea-list.teal li::before { background: var(--teal); }
+  .idea-list.check li::before {
+    content: "✓"; background: none; color: var(--teal);
+    font-weight: 700; width: auto; height: auto; top: 0; font-size: 1.05em;
+  }
+
+  /* ===== COMPARE ===== */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 0.6em; }
+  .compare-col { border-radius: var(--radius); padding: 1em 1.15em; display: flex; flex-direction: column; }
+  .compare-col.bad { background: #FBEDE6; border: 1px solid var(--terracotta-soft); }
+  .compare-col.good { background: #EBF3F1; border: 1px solid var(--teal-soft); }
+  .compare-label {
+    font-family: var(--font-mono); font-size: clamp(10px, 0.95vw, 12.5px);
+    text-transform: uppercase; letter-spacing: 0.09em; font-weight: 700; margin-bottom: 0.5em;
+  }
+  .compare-col.bad .compare-label { color: var(--terracotta-deep); }
+  .compare-col.good .compare-label { color: var(--teal-deep); }
+  .compare-col p {
+    font-size: clamp(11.5px, 1.2vw, 14.5px); line-height: 1.5; margin: 0 0 0.5em 0;
+  }
+  .compare-col p:last-child { margin-bottom: 0; }
+  .compare-col p.mono { font-family: var(--font-mono); }
+  .mono { font-family: var(--font-mono); font-size: 0.94em; }
+
+  /* ===== DEVICE WINDOW ===== */
+  .device-window {
+    background: #211C17; border-radius: 11px; overflow: hidden;
+    box-shadow: 0 12px 28px rgba(42,37,33,0.28);
+  }
+  .window-header {
+    display: flex; align-items: center; gap: 8px; padding: 0.5em 0.85em;
+    background: #16130F; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .window-dots { display: flex; gap: 5px; }
+  .window-dots span { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .window-dots span:nth-child(1) { background: #E0796B; }
+  .window-dots span:nth-child(2) { background: #E8C15E; }
+  .window-dots span:nth-child(3) { background: #7FB88F; }
+  .window-filename {
+    font-family: var(--font-mono); font-size: clamp(10px, 0.98vw, 12.5px);
+    color: var(--paper-alt); opacity: 0.8;
+  }
+  .window-body {
+    padding: 0.85em 1.1em; font-family: var(--font-mono);
+    font-size: clamp(10.5px, 1.14vw, 13.5px); line-height: 1.62;
+    color: var(--paper-alt); white-space: pre-wrap;
+  }
+  .window-body .k { color: #E8B79A; }
+  .window-body .c { color: #9A8F7F; }
+  .window-body .prompt { color: #8FC49A; }
+  .window-body .out { color: var(--paper-alt); opacity: 0.84; }
+
+  /* ===== ANNOTATED ===== */
+  .annotated {
+    display: grid; grid-template-columns: 1.12fr 0.88fr;
+    gap: 1.1em; margin-top: 0.55em; align-items: start;
+  }
+  .anno-list { list-style: none; margin: 0; padding: 0; }
+  .anno-list li {
+    display: flex; gap: 0.65em; margin-bottom: 0.62em;
+    font-size: clamp(11px, 1.16vw, 14.5px); line-height: 1.45;
+  }
+  .anno-list li:last-child { margin-bottom: 0; }
+  .anno-num {
+    flex-shrink: 0; background: var(--terracotta); color: #fff;
+    font-family: var(--font-mono); font-size: 0.8em; font-weight: 700;
+    width: 1.65em; height: 1.65em; line-height: 1.65em;
+    border-radius: 50%; text-align: center; margin-top: 0.12em;
+  }
+  .anno-list strong { display: block; }
+  .anno-list span.anno-text { color: var(--ink-soft); }
+
+  /* ===== ANALOGY / WARN ===== */
+  .analogy {
+    display: flex; gap: 0.9em; align-items: flex-start;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: var(--radius); padding: 0.85em 1.1em; margin-top: 0.7em;
+  }
+  .analogy .analogy-tag {
+    font-family: var(--font-mono); font-size: clamp(9.5px, 0.95vw, 11.5px);
+    text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+    color: #8A6516; flex-shrink: 0; padding-top: 0.15em;
+  }
+  .analogy p {
+    margin: 0; font-size: clamp(11.5px, 1.22vw, 15px);
+    line-height: 1.5; color: var(--gold-ink);
+  }
+
+  /* ===== TABLE ===== */
+  table.sum-table {
+    width: 100%; border-collapse: collapse; margin-top: 0.7em;
+    font-size: clamp(11px, 1.16vw, 14.5px);
+  }
+  table.sum-table th {
+    font-family: var(--font-mono); text-transform: uppercase;
+    letter-spacing: 0.06em; font-size: clamp(9.5px, 0.95vw, 11.5px);
+    color: var(--ink-faint); text-align: left;
+    padding: 0.5em 0.7em; border-bottom: 2px solid var(--line);
+  }
+  table.sum-table td {
+    padding: 0.58em 0.7em; border-bottom: 1px solid var(--line);
+    vertical-align: top; line-height: 1.42;
+  }
+  table.sum-table tr:last-child td { border-bottom: none; }
+  table.sum-table td.term {
+    font-family: var(--font-mono); font-weight: 600;
+    color: var(--terracotta-deep); white-space: nowrap;
+  }
+
+  /* ===== DIAGRAM ===== */
+  .diagram-wrap { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+  .diagram-wrap.compact { flex: none; height: 42%; margin-top: 0.45em; }
+  .diagram-wrap svg { width: 100%; height: 100%; max-height: 100%; }
+  .caption {
+    text-align: center; font-size: clamp(10.5px, 1.1vw, 13.5px);
+    color: var(--ink-faint); font-family: var(--font-mono); margin-top: 0.45em;
+  }
+  .node-rect { fill: var(--white); stroke: var(--line); stroke-width: 1.5; }
+  .node-rect.terracotta { fill: var(--terracotta-soft); stroke: var(--terracotta); }
+  .node-rect.teal { fill: var(--teal-soft); stroke: var(--teal); }
+  .node-rect.hub { fill: var(--teal-deep); stroke: var(--teal-deep); }
+  .flow-line { stroke: var(--ink-faint); stroke-width: 2.5; fill: none; }
+  .flow-line.accent { stroke: var(--terracotta); }
+  .node-label { font-family: var(--font-body); font-weight: 600; color: var(--ink); font-size: 15px; line-height: 1.25; }
+  .node-label.small { font-size: 13px; }
+  .node-label.hub { color: var(--white); }
+  .node-sub { font-family: var(--font-body); color: var(--ink-soft); font-size: 11.5px; line-height: 1.3; margin-top: 2px; }
+
+  /* ===== RECAP ===== */
+  .recap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1em; margin-top: 0.9em; }
+  .recap-num {
+    font-family: var(--font-display); font-size: clamp(26px, 3vw, 40px);
+    color: var(--terracotta-soft); -webkit-text-stroke: 1.5px var(--terracotta);
+    font-weight: 700; margin-bottom: 0.15em;
+  }
+
+  /* ===== CHROME ===== */
+  .progress-bar {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+    background: rgba(42,37,33,0.08); z-index: 5;
+  }
+  .progress-fill { height: 100%; background: var(--terracotta); transition: width 0.35s ease; }
+  .nav-hint {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(247,241,230,0.55); letter-spacing: 0.04em;
+    z-index: 20; pointer-events: none; transition: opacity 0.4s ease;
+  }
+  .nav-hint.hide { opacity: 0; }
+  .notes-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(360px, 88vw);
+    background: var(--teal-deep); color: var(--paper-alt);
+    padding: 28px 24px; transform: translateX(100%);
+    transition: transform 0.3s ease; z-index: 30; overflow-y: auto;
+    box-shadow: -12px 0 30px rgba(0,0,0,0.3);
+  }
+  .notes-panel.open { transform: translateX(0); }
+  .notes-panel h3 {
+    font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em;
+    font-size: 12px; color: var(--terracotta-soft); margin: 0 0 1em 0;
+  }
+  .notes-panel p { font-size: 14.5px; line-height: 1.6; }
+  .deck-chrome { position: fixed; top: 14px; right: 14px; z-index: 25; display: flex; gap: 8px; }
+  .chrome-btn {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
+    background: rgba(247,241,230,0.1); color: var(--paper);
+    border: 1px solid rgba(247,241,230,0.25);
+    padding: 7px 12px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(6px);
+  }
+  .chrome-btn:hover { background: rgba(247,241,230,0.2); }
+
+  @media (max-width: 700px) {
+    .stage { position: static; height: auto; background: var(--paper); }
+    .deck {
+      position: static; width: 100%; height: auto;
+      max-width: none; max-height: none; aspect-ratio: auto; box-shadow: none;
+    }
+    .slide {
+      position: static !important; display: block !important; opacity: 1 !important;
+      animation: none !important; padding: 40px 22px;
+      border-bottom: 1px solid var(--line); min-height: 92vh;
+    }
+    .compare-grid, .card-row.cols-2, .card-row.cols-3, .card-row.cols-4,
+    .recap-grid, .annotated, .os-split { grid-template-columns: 1fr; }
+    .nav-hint, .progress-bar, .deck-chrome { display: none; }
+    .notes-panel { width: 100vw; }
+  }
+
+  @media print {
+    .stage { position: static; background: white; }
+    .deck { position: static; width: auto; height: auto; max-width: none; max-height: none; box-shadow: none; }
+    .slide { position: static !important; display: flex !important; opacity: 1 !important; page-break-after: always; height: 100vh; }
+    .nav-hint, .progress-bar, .deck-chrome, .notes-panel { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="deck" id="deck">
+
+    <!-- ===== 1 TITLE ===== -->
+    <section class="slide slide-title active" data-notes-timing="0:00">
+      <div class="slide-content">
+        <div class="eyebrow">4-Day Workshop · Day 4 of 4</div>
+        <h1>Ship <span class="accent-word">Real</span> Software</h1>
+        <div class="deck-sub">A working application with a database, built start to finish in one session — using the same skills a professional team uses.</div>
+        <div class="meta-row">
+          <span><strong>Session</strong> — 2 hours</span>
+          <span><strong>Today</strong> — the capstone</span>
+          <span><strong>You</strong> — direct, the agent builds</span>
+        </div>
+      </div>
+      <aside class="notes">Big day. Ask everyone to open a terminal and run opencode before you say anything else, so setup problems surface in the first two minutes rather than the twentieth.</aside>
+    </section>
+
+    <!-- ===== 2 THE WEEK ===== -->
+    <section class="slide" data-notes-timing="0:01">
+      <div class="slide-content">
+        <div class="kicker">Where you've got to</div>
+        <h1 class="headline">Everything today needs, you already have</h1>
+        <div class="card-row cols-4">
+          <div class="card"><div class="card-title">Day 1</div><p class="card-body">What an agent is, tokens, and six ways to ask well.</p></div>
+          <div class="card accent-terracotta"><div class="card-title">Day 2</div><p class="card-body">Your own AGENTS.md, a command, and three skills.</p></div>
+          <div class="card accent-teal"><div class="card-title">Day 3</div><p class="card-body">Controlling context, and directing three agents at once.</p></div>
+          <div class="card accent-terracotta"><div class="card-title">Today</div><p class="card-body">All of it at once, on real software.</p></div>
+        </div>
+        <p class="lede" style="margin-top:0.9em;">Nothing new is being introduced except one skill. Today is about putting the week together.</p>
+      </div>
+      <aside class="notes">Say the last line deliberately. People arrive at a capstone expecting a step up in difficulty; the truth is they have used every piece of this already.</aside>
+    </section>
+
+    <!-- ===== 3 WHAT YOU'LL BUILD ===== -->
+    <section class="slide" data-notes-timing="0:03">
+      <div class="slide-content">
+        <div class="kicker">Today's build</div>
+        <h1 class="headline">The other side of the bakery counter</h1>
+        <p class="lede">Day 3 built the shop window. Today you build the till — the tool the owner uses to see where the money is.</p>
+        <div class="device-window">
+          <div class="window-header">
+            <div class="window-dots"><span></span><span></span><span></span></div>
+            <span class="window-filename">localhost:3000</span>
+          </div>
+          <div class="window-body"><span class="k">  Cash-Flow Tracker — Sunrise Bakery</span>
+
+<span class="k">  Balance:  3000</span>
+
+<span class="out">  [ date ] [ description ] [ category ▾ ] [ in ● out ] [ amount ] [ Add ]</span>
+
+<span class="c">  ─────────────────────────────────────────────────────────────</span>
+<span class="out">  Morning bread sales    Sales       in      5000
+  Flour and sugar        Supplies    out     1200
+  Electricity            Utilities   out      800</span></div>
+        </div>
+      </div>
+      <aside class="notes">Showing the finished thing up front matters. People work better toward a target they can picture, and this removes the vagueness of "we will build an app".</aside>
+    </section>
+
+    <!-- ===== 4 REAL SOFTWARE ===== -->
+    <section class="slide" data-notes-timing="0:05">
+      <div class="slide-content">
+        <div class="kicker">Why this counts</div>
+        <h1 class="headline">This is genuinely a real application</h1>
+        <div class="card-row cols-4">
+          <div class="card accent-teal"><div class="card-title">A database</div><p class="card-body">SQLite. Your data survives closing the laptop.</p></div>
+          <div class="card accent-teal"><div class="card-title">A backend</div><p class="card-body">NestJS — the same framework used in production systems.</p></div>
+          <div class="card accent-teal"><div class="card-title">A frontend</div><p class="card-body">A real page that talks to the server.</p></div>
+          <div class="card accent-terracotta"><div class="card-title">No shortcuts</div><p class="card-body">Nothing is faked or pre-written. You build all of it today.</p></div>
+        </div>
+      </div>
+      <aside class="notes">Worth stating plainly. Some will assume a workshop app is a toy - it is not, it is a small but genuine full-stack application, and they should say so when they show it to people.</aside>
+    </section>
+
+    <!-- ===== 5 HOW TODAY WORKS ===== -->
+    <section class="slide" data-notes-timing="0:06">
+      <div class="slide-content">
+        <div class="kicker">Same as the last two days</div>
+        <h1 class="headline">How today works</h1>
+        <div class="card-row cols-2">
+          <div class="card accent-terracotta">
+            <div class="card-title">Orange means type</div>
+            <p class="card-body" style="margin-bottom:0.6em;">Stop watching, start typing. Everything you need is on the slide.</p>
+            <div class="do-now-badge" style="display:inline-block;">Do now</div>
+          </div>
+          <div class="card accent-teal">
+            <div class="card-title">Gold means wait</div>
+            <p class="card-body" style="margin-bottom:0.6em;">We all stop and make sure the room is together before going on.</p>
+            <span style="display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8A6516;background:var(--gold-soft);border:1px solid #E6CE9E;padding:0.35em 0.8em;border-radius:999px;">✋ Checkpoint</span>
+          </div>
+        </div>
+        <div class="analogy">
+          <span class="analogy-tag">The rule that matters most today</span>
+          <p>When something breaks — and it will — <strong>tell the agent what you see and ask it to fix it.</strong> Never hand-edit the code. That is the skill being tested today, not NestJS.</p>
+        </div>
+      </div>
+      <aside class="notes">More will break today than on any previous day because there are more moving parts. Say the standing rule twice and mean it - the temptation to hand-edit is what derails people.</aside>
+    </section>
+
+    <!-- ===== 6 READY CHECK ===== -->
+    <section class="slide" data-notes-timing="0:07">
+      <div class="slide-content">
+        <div class="kicker">Do now · Ready check</div>
+        <h1 class="headline">Before anything else</h1>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Open a terminal and start the agent</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> opencode</div>
+          <div class="expect">
+            <span class="expect-tag">Look at the bottom</span>
+            <span>The status line must mention <strong>Google</strong>. If it doesn't, your key isn't connected — run <span class="mono">/connect</span> and choose Google.</span>
+          </div>
+        </div>
+        <div class="checkpoint">
+          <span class="cp-tag">✋ Checkpoint</span>
+          <p>Hands up if the status line does <em>not</em> say Google. We fix this now — a key problem discovered at minute forty costs the whole session.</p>
+        </div>
+      </div>
+      <aside class="notes">Do not skip or rush this. Every downstream stage depends on a working key, and the failure mode if you skip it is someone silently stuck for twenty minutes.</aside>
+    </section>
+
+    <!-- ===== 7 SECTION: THE METHOD ===== -->
+    <section class="slide slide-section" data-notes-timing="0:08">
+      <div class="slide-content">
+        <div class="section-num">The method</div>
+        <h1>Three skills, one chain</h1>
+        <div class="section-sub">The same shape as Tuesday — sharpen the idea, plan it, build it. With one new skill that governs how the code actually gets written.</div>
+        <div class="section-agenda">
+          <span>idea-refine</span>
+          <span>planning-and-task-breakdown</span>
+          <span>incremental-implementation</span>
+        </div>
+      </div>
+      <aside class="notes">Frame this as familiar, not new. Two of the three they have used already.</aside>
+    </section>
+
+    <!-- ===== 8 THE REAL THING ===== -->
+    <section class="slide" data-notes-timing="0:09">
+      <div class="slide-content">
+        <div class="kicker">An honest word about today's skills</div>
+        <h1 class="headline">These are the real ones</h1>
+        <p class="lede">On Tuesday you wrote simple versions yourself, to learn what a skill is. Today's are the full professional versions — the same files a working software team would use.</p>
+        <div class="card-row cols-3">
+          <div class="card accent-terracotta"><div class="card-title">idea-refine</div><p class="card-body">Turns a vague idea into a one-page spec, by asking before writing.</p></div>
+          <div class="card accent-terracotta"><div class="card-title">planning-and-task-breakdown</div><p class="card-body">Turns that spec into ordered tasks you can actually start.</p></div>
+          <div class="card accent-teal"><div class="card-title">incremental-implementation</div><p class="card-body"><strong>New today.</strong> Governs how code gets written — one small piece at a time.</p></div>
+        </div>
+      </div>
+      <aside class="notes">The point to land: they are not being given training wheels. These are longer and stricter than the versions they wrote, and that is worth saying because it is a genuine mark of respect for the room.</aside>
+    </section>
+
+    <!-- ===== 9 INSTALL SKILLS ===== -->
+    <section class="slide" data-notes-timing="0:10">
+      <div class="slide-content">
+        <div class="kicker">Do now · Set up</div>
+        <h1 class="headline">Install the three skills</h1>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Copy them in, then confirm</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> copy the three skill folders from the day4 folder
+  into .opencode/skills/ — idea-refine,
+  planning-and-task-breakdown and
+  incremental-implementation. Then list my skills.</div>
+          <div class="expect">
+            <span class="expect-tag">You should see</span>
+            <span>Three skills listed. Note they're <em>folders</em>, each with a <span class="mono">SKILL.md</span> inside — same shape as the ones you made on Tuesday.</span>
+          </div>
+        </div>
+        <div class="checkpoint">
+          <span class="cp-tag">✋ Checkpoint</span>
+          <p>Everyone lists three skills before we go on.</p>
+        </div>
+      </div>
+      <aside class="notes">If anyone is missing one, the fastest fix is asking their agent to check the folder and copy what is missing. Do not let anyone proceed with two.</aside>
+    </section>
+
+    <!-- ===== 10 SECTION: STAGE 1 ===== -->
+    <section class="slide slide-section" data-notes-timing="0:13">
+      <div class="slide-content">
+        <div class="section-num">Stage 1 of 5</div>
+        <h1>Refine the Idea</h1>
+        <div class="section-sub">Watch how a vague sentence becomes a specification — then we all take the same one, so we build the same thing.</div>
+        <div class="section-agenda">
+          <span>I demonstrate</span>
+          <span>You take the result</span>
+          <span>We read it together</span>
+        </div>
+      </div>
+      <aside class="notes">Explain the shape before you start: you demo, they receive. Otherwise people open their laptops and start typing, and you lose them.</aside>
+    </section>
+
+    <!-- ===== 11 THE DEMO ===== -->
+    <section class="slide" data-notes-timing="0:14">
+      <div class="slide-content">
+        <div class="kicker">Watch, don't type</div>
+        <h1 class="headline">Watch a sentence become a specification</h1>
+        <p class="lede">Laptops down for seven minutes. I'll run the skill on this brief and answer its questions out loud.</p>
+        <div class="cmd"><span class="prompt-sym">&gt;</span> use the <span class="k">idea-refine</span> skill on this: a small tool for Sunrise
+  Bakery to track money coming in and going out, so the owner
+  can see where they stand at the end of a day</div>
+        <div class="card-row cols-3" style="margin-top:0.7em;">
+          <div class="card accent-teal"><div class="card-title">It won't start writing</div><p class="card-body">It asks first. The opposite of what people expect from AI.</p></div>
+          <div class="card accent-teal"><div class="card-title">It offers choices</div><p class="card-body">Two or three directions, with a recommendation and a reason.</p></div>
+          <div class="card accent-terracotta"><div class="card-title">The Not Doing list</div><p class="card-body">Good ideas, cut on purpose. This is what makes a build finishable.</p></div>
+        </div>
+      </div>
+      <aside class="notes">Ask them to put laptops down - this only works if they are watching. Narrate your answers rather than just typing them, and stop at seven minutes even if it is mid-flow; the finished document is coming next anyway.</aside>
+    </section>
+
+    <!-- ===== 12 THE PRD ===== -->
+    <section class="slide" data-notes-timing="0:21">
+      <div class="slide-content">
+        <div class="kicker">Do now · Take the result</div>
+        <h1 class="headline">Everyone takes the same specification</h1>
+        <p class="lede">Mine took a few minutes and yours would come out slightly different. So that we all build the same thing, here's the finished one.</p>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Save it into your project</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> create docs/ideas/cash-flow-tracker.md with this
+  content: <span class="c">[paste the PRD you were given]</span></div>
+        </div>
+        <div class="analogy">
+          <span class="analogy-tag">This isn't cheating</span>
+          <p>A real team agrees one specification and works from it. Twelve people each with a private version isn't how software gets built — it's how projects fail.</p>
+        </div>
+      </div>
+      <aside class="notes">Somebody usually feels short-changed at not running it themselves. The analogy answers that honestly, and they will run the full skill on their own material later anyway.</aside>
+    </section>
+
+    <!-- ===== 13 READ IT ===== -->
+    <section class="slide" data-notes-timing="0:25">
+      <div class="slide-content">
+        <div class="kicker">Read together</div>
+        <h1 class="headline">Two sections decide everything that follows</h1>
+        <div class="compare-grid">
+          <div class="compare-col good">
+            <div class="compare-label">MVP Scope — what we build</div>
+            <p>One transaction record. Add it from a form. See them all in a table. A running balance. Delete a mistake.</p>
+            <div class="verdict">Five things. That's the whole app.</div>
+          </div>
+          <div class="compare-col bad">
+            <div class="compare-label">Not Doing — what we refuse</div>
+            <p>No login. No editing. No category management. No charts. No deployment.</p>
+            <div class="verdict">Every one a reasonable idea, cut on purpose.</div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">Read both columns aloud. When someone later asks "should we add a login" the answer is already written down, which is exactly what the Not Doing list is for.</aside>
+    </section>
+
+    <!-- ===== 14 SECTION: STAGE 2 ===== -->
+    <section class="slide slide-section" data-notes-timing="0:28">
+      <div class="slide-content">
+        <div class="section-num">Stage 2 of 5</div>
+        <h1>Plan &amp; Slice</h1>
+        <div class="section-sub">Turning a specification into tasks — and the one decision about <em>how</em> to cut them up that changes everything.</div>
+        <div class="section-agenda">
+          <span>Two ways to slice</span>
+          <span>Run the skill</span>
+          <span>The project rules</span>
+        </div>
+      </div>
+      <aside class="notes">The slicing idea is the intellectual content of today. Give it proper time here; the build goes far better if they understand why the order is what it is.</aside>
+    </section>
+
+    <!-- ===== 15 SLICING ===== -->
+    <section class="slide" data-notes-timing="0:29">
+      <div class="slide-content">
+        <div class="kicker">The key decision</div>
+        <h1 class="headline">Two ways to cut up the same work</h1>
+        <div class="compare-grid">
+          <div class="compare-col bad">
+            <div class="compare-label">By layer — the obvious way</div>
+            <p class="mono">1. Build the whole database<br>2. Build all the endpoints<br>3. Build the whole page<br>4. Connect it up</p>
+            <p style="margin-top:0.6em;">Run out of time at step 2 and you have a database and no application.</p>
+            <div class="verdict">Nothing works until everything works.</div>
+          </div>
+          <div class="compare-col good">
+            <div class="compare-label">By feature — vertical slices</div>
+            <p class="mono">1. Make it run<br>2. Record a transaction<br>3. See it and the balance<br>4. Delete one</p>
+            <p style="margin-top:0.6em;">Run out of time at step 2 and you still have a tool that records money.</p>
+            <div class="verdict">Every step ends with something usable.</div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">This is the single most transferable idea of the day and it applies far beyond software - it is how you would plan a scheme of work too. Ask which column they would rather be in at the final bell.</aside>
+    </section>
+
+    <!-- ===== 16 RUN THE PLANNER ===== -->
+    <section class="slide" data-notes-timing="0:32">
+      <div class="slide-content">
+        <div class="kicker">Do now · Stage 2</div>
+        <h1 class="headline">Turn the specification into tasks</h1>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Say "slice vertically" explicitly</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> use the <span class="k">planning-and-task-breakdown</span> skill on
+  docs/ideas/cash-flow-tracker.md. Slice vertically —
+  each task must end with something I can open in a
+  browser and use.</div>
+          <div class="expect">
+            <span class="expect-tag">Why say it</span>
+            <span>Left alone it may still plan by layer. Naming the shape you want is the difference — exactly like naming the file on Day 3.</span>
+          </div>
+        </div>
+        <div class="checkpoint">
+          <span class="cp-tag">✋ Checkpoint</span>
+          <p>Hands up if your plan has more than five tasks, or if task 2 doesn't produce something usable on its own. We'll trim — or take the ready-made list.</p>
+        </div>
+      </div>
+      <aside class="notes">Have tasks/todo.md ready to hand out. If more than a few people have drifted, distribute it and move on rather than debugging five different plans in front of the room.</aside>
+    </section>
+
+    <!-- ===== 17 THE PLAN ===== -->
+    <section class="slide" data-notes-timing="0:35">
+      <div class="slide-content">
+        <div class="kicker">What good looks like</div>
+        <h1 class="headline">Five tasks, three phases</h1>
+        <table class="sum-table">
+          <tr><th>Task</th><th>Phase</th><th>Ends with</th></tr>
+          <tr><td class="term">1 — Scaffold</td><td>Foundation</td><td>The server runs and a page loads</td></tr>
+          <tr><td class="term">2 — Record a transaction</td><td>Core</td><td>A form that saves money, and it survives a restart</td></tr>
+          <tr><td class="term">3 — See the money</td><td>Core</td><td>A table and a running balance</td></tr>
+          <tr><td class="term">4 — Delete <em>(stretch)</em></td><td>Polish</td><td>Remove a row; the balance updates</td></tr>
+          <tr><td class="term">5 — Summary bars <em>(stretch)</em></td><td>Polish</td><td>Proportional bars, made of plain CSS</td></tr>
+        </table>
+        <p class="lede" style="margin-top:0.8em;">Tasks 1 to 3 are the app. Four and five are for anyone who finishes early.</p>
+      </div>
+      <aside class="notes">Say clearly that stopping after task 3 is a complete success. Framing the stretch tasks as optional up front stops slower pairs feeling they failed.</aside>
+    </section>
+
+    <!-- ===== 18 AGENTS.MD ===== -->
+    <section class="slide" data-notes-timing="0:37">
+      <div class="slide-content">
+        <div class="kicker">Do now · The project rules</div>
+        <h1 class="headline">Adapt a professional skill to your situation</h1>
+        <p class="lede">These skills expect a professional team — they'll want to use version control and write tests. Neither belongs in a two-hour session. You don't edit the skill; you write project rules that override it.</p>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Create the project's AGENTS.md</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> create an AGENTS.md for this project.
+  Stack: NestJS, SQLite via TypeORM, plain HTML/CSS/JS in /public.
+  Money: whole rupees only, always stored as a number.
+  Rules: no login, one Transaction entity, fixed categories,
+  do not use git or commit, do not write test files,
+  ask before adding any dependency.</div>
+        </div>
+      </div>
+      <aside class="notes">This is a genuinely valuable lesson beyond today: you adapt a professional method to your context with project rules, not by rewriting the method. The money lines matter more than they look - the next slide explains why.</aside>
+    </section>
+
+    <!-- ===== 19 SECTION: BUILD ===== -->
+    <section class="slide slide-section" data-notes-timing="0:40">
+      <div class="slide-content">
+        <div class="section-num">Stage 3 of 5</div>
+        <h1>Build It</h1>
+        <div class="section-sub">Fifty minutes. One task at a time, checked before the next one starts. Never two at once.</div>
+        <div class="section-agenda">
+          <span>Task 1 — scaffold</span>
+          <span>Task 2 — record</span>
+          <span>Task 3 — see it</span>
+        </div>
+      </div>
+      <aside class="notes">Longest stretch of the week. Set the pace expectation now: we move together, and the checkpoints are not optional.</aside>
+    </section>
+
+    <!-- ===== 20 THE LOOP ===== -->
+    <section class="slide" data-notes-timing="0:41">
+      <div class="slide-content">
+        <div class="kicker">How the new skill works</div>
+        <h1 class="headline">Build a bit, check it works, then build the next bit</h1>
+        <p class="lede">That's the whole of <span class="mono">incremental-implementation</span>. It sounds obvious. It is the discipline almost everyone abandons the moment they're in a hurry.</p>
+        <div class="diagram-wrap compact">
+          <svg viewBox="0 0 900 150" role="img" aria-label="A loop: implement one slice, verify it works, then move to the next slice">
+            <defs>
+              <marker id="arrowInc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#6B6156"/>
+              </marker>
+            </defs>
+            <line class="flow-line" x1="268" y1="52" x2="322" y2="52" marker-end="url(#arrowInc)"/>
+            <line class="flow-line" x1="578" y1="52" x2="632" y2="52" marker-end="url(#arrowInc)"/>
+            <path class="flow-line accent" marker-end="url(#arrowInc)" d="M 780 92 C 780 132, 140 132, 140 92" stroke-dasharray="6,6"/>
+            <text x="450" y="146" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#C1592A">only now, start the next one</text>
+
+            <rect class="node-rect terracotta" x="14" y="14" width="254" height="78" rx="13"/>
+            <foreignObject x="14" y="14" width="254" height="78">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Karla',sans-serif;padding:0 8px;"><div class="node-label small">Build one small piece</div><div class="node-sub">one task, nothing else</div></div>
+            </foreignObject>
+
+            <rect class="node-rect hub" x="322" y="14" width="256" height="78" rx="13"/>
+            <foreignObject x="322" y="14" width="256" height="78">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Karla',sans-serif;padding:0 8px;"><div class="node-label hub small">Check it actually works</div><div class="node-sub" style="color:#D6E6E2;">in the browser, with your eyes</div></div>
+            </foreignObject>
+
+            <rect class="node-rect teal" x="632" y="14" width="254" height="78" rx="13"/>
+            <foreignObject x="632" y="14" width="254" height="78">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Karla',sans-serif;padding:0 8px;"><div class="node-label small">Only then, move on</div><div class="node-sub">never two tasks at once</div></div>
+            </foreignObject>
+          </svg>
+        </div>
+      </div>
+      <aside class="notes">The reason this matters: a bug in task 2 makes tasks 3, 4 and 5 wrong, and you will not know which change caused it. Checking each piece is what keeps debugging small.</aside>
+    </section>
+
+    <!-- ===== 21 TASK 1 ===== -->
+    <section class="slide" data-notes-timing="0:42">
+      <div class="slide-content">
+        <div class="kicker">Do now · Task 1 of 3</div>
+        <h1 class="headline">Make it run</h1>
+        <p class="lede">No features yet. This task exists to prove the skeleton works before anything is built on top of it.</p>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Hand task 1 to the build skill</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> use the <span class="k">incremental-implementation</span> skill to build
+  Task 1 from tasks/todo.md</div>
+          <div class="expect">
+            <span class="expect-tag">You should see</span>
+            <span>A NestJS project, TypeORM connected to <span class="mono">cashflow.sqlite</span>, and static files served. Then <span class="mono">npm run start:dev</span> running without errors.</span>
+          </div>
+        </div>
+        <div class="checkpoint">
+          <span class="cp-tag">✋ Checkpoint</span>
+          <p>Open <span class="mono">localhost:3000</span>. Everyone should see a page. <strong>Nobody moves past this</strong> — every later task sits on top of it.</p>
+        </div>
+      </div>
+      <aside class="notes">This is the slowest task and the one most likely to go wrong on old laptops. Budget generously and expect to circulate. If a machine is badly stuck, pair them with a neighbour rather than holding the room.</aside>
+    </section>
+
+    <!-- ===== 22 TASK 2 ===== -->
+    <section class="slide" data-notes-timing="0:56">
+      <div class="slide-content">
+        <div class="kicker">Do now · Task 2 of 3</div>
+        <h1 class="headline">Record money — the slice that makes it an app</h1>
+        <p class="lede">One task, and it goes all the way through: the database record, the endpoint that saves it, and the form you type into.</p>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Next task, same skill</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> now build Task 2 from tasks/todo.md</div>
+          <div class="expect">
+            <span class="expect-tag">You should see</span>
+            <span>A form on the page. Type a sale into it, submit, and get a confirmation back.</span>
+          </div>
+        </div>
+        <div class="analogy">
+          <span class="analogy-tag">This is a vertical slice</span>
+          <p>Database, server and page — all three touched, for one small feature. That's why you have something usable after one task instead of after four.</p>
+        </div>
+        <div class="checkpoint">
+          <span class="cp-tag">✋ Checkpoint</span>
+          <p>Everyone has saved a real transaction that survives a restart. <strong>This is the moment it became software.</strong></p>
+        </div>
+      </div>
+      <aside class="notes">Point out that they just built across all three layers in one task - that is the vertical slicing idea from Stage 2 made concrete. Let the room enjoy the checkpoint; many will have just made a database store something for the first time.</aside>
+    </section>
+
+    
+    
+    <!-- ===== 25 TASK 3 ===== -->
+    <section class="slide" data-notes-timing="1:14">
+      <div class="slide-content">
+        <div class="kicker">Do now · Task 3 of 3</div>
+        <h1 class="headline">See the money, and what it adds up to</h1>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">The last core task</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> now build Task 3 from tasks/todo.md</div>
+          <div class="expect">
+            <span class="expect-tag">You should see</span>
+            <span>A table of every transaction, newest first, and a running balance at the top that updates as you add more.</span>
+          </div>
+        </div>
+        <div class="analogy">
+          <span class="analogy-tag">Where the sum happens</span>
+          <p>The server adds it up, not the page. One place doing the arithmetic means one place to check when a number looks wrong.</p>
+        </div>
+      </div>
+      <aside class="notes">The single-source-of-truth point is a real design principle and worth one sentence. After this task they have a complete, useful tool - say so.</aside>
+    </section>
+
+    <!-- ===== 26 SECTION: TEST ===== -->
+    <section class="slide slide-section" data-notes-timing="1:26">
+      <div class="slide-content">
+        <div class="section-num">Stage 4 of 5</div>
+        <h1>Test It Together</h1>
+        <div class="section-sub">The whole room enters the same three transactions. If everyone gets the same balance, everyone's app works.</div>
+      </div>
+      <aside class="notes">A shared test across eighty machines is a genuinely satisfying moment. Build it up a little.</aside>
+    </section>
+
+    <!-- ===== 27 THE TEST ===== -->
+    <section class="slide" data-notes-timing="1:27">
+      <div class="slide-content">
+        <div class="kicker">Do now · Everyone together</div>
+        <h1 class="headline">Three transactions, one answer</h1>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Type these three, exactly as written</span>
+          </div>
+          <table class="sum-table" style="margin-top:0.2em;">
+            <tr><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr>
+            <tr><td>Morning bread sales</td><td>Sales</td><td class="term">in</td><td>5000</td></tr>
+            <tr><td>Flour and sugar</td><td>Supplies</td><td class="term">out</td><td>1200</td></tr>
+            <tr><td>Electricity</td><td>Utilities</td><td class="term">out</td><td>800</td></tr>
+          </table>
+        </div>
+        <div class="checkpoint">
+          <span class="cp-tag">✋ Checkpoint</span>
+          <p>Everyone's balance should read <strong>3000</strong>. A different number is a bug to find <em>with your agent</em> — that's the last rep of the week, not a failure.</p>
+        </div>
+      </div>
+      <aside class="notes">If anyone's balance is wrong, treat it as a gift - work it through publicly with the agent, because the whole room learns from watching one real diagnosis. Getting the same number on eighty machines is a genuinely satisfying moment, so build it up a little.</aside>
+    </section>
+
+    <!-- ===== 28 SECTION: ITERATE ===== -->
+    <section class="slide slide-section" data-notes-timing="1:38">
+      <div class="slide-content">
+        <div class="section-num">Stage 5 of 5</div>
+        <h1>Change It</h1>
+        <div class="section-sub">Software is never finished. The real test of a tool is how easily you can ask it for one more thing.</div>
+      </div>
+      <aside class="notes">Short closing stage. The point is to prove that the thing they built is changeable, not frozen.</aside>
+    </section>
+
+    <!-- ===== 29 ITERATE ===== -->
+    <section class="slide" data-notes-timing="1:39">
+      <div class="slide-content">
+        <div class="kicker">Do now · One more thing</div>
+        <h1 class="headline">Ask for a change and watch it happen</h1>
+        <div class="do-now">
+          <div class="do-now-head">
+            <span class="do-now-badge">Do now</span>
+            <span class="do-now-title">Then try one of your own</span>
+          </div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> add a filter so I can see only money going out</div>
+          <div class="expect">
+            <span class="expect-tag">Then experiment</span>
+            <span>"Sort the newest first." · "Show today's total separately." · "Make the balance red when it goes below zero."</span>
+          </div>
+        </div>
+        <div class="analogy">
+          <span class="analogy-tag">Notice how small that was</span>
+          <p>One sentence, and the app changed. That's what having a specification, a plan and clean project rules buys you.</p>
+        </div>
+      </div>
+      <aside class="notes">Encourage genuine experiments here. It is also the moment they realise they could keep going after today, which is the feeling you want them leaving with.</aside>
+    </section>
+
+    <!-- ===== 30 WHAT YOU BUILT ===== -->
+    <section class="slide" data-notes-timing="1:43">
+      <div class="slide-content">
+        <div class="kicker">Take stock</div>
+        <h1 class="headline">What's running on your laptop right now</h1>
+        <ul class="idea-list check teal">
+          <li>A <strong>database</strong> holding real records that survive the laptop being closed.</li>
+          <li>A <strong>backend</strong> with four working endpoints, built on a framework used in production systems.</li>
+          <li>A <strong>web page</strong> that talks to that backend and shows a balance that's arithmetically correct.</li>
+          <li>A <strong>specification</strong>, a <strong>plan</strong> and <strong>project rules</strong> — the documents a real team would have.</li>
+        </ul>
+        <p class="lede" style="margin-top:0.8em;">You wrote none of the code. You directed every line of it.</p>
+      </div>
+      <aside class="notes">Read it slowly. The last line is the one that matters and it is worth a pause before you say it.</aside>
+    </section>
+
+    <!-- ===== 31 THE WEEK ===== -->
+    <section class="slide" data-notes-timing="1:46">
+      <div class="slide-content">
+        <div class="kicker">Four days</div>
+        <h1 class="headline">Look how far that went</h1>
+        <table class="sum-table">
+          <tr><th>Day</th><th>Where you started</th><th>Where you got to</th></tr>
+          <tr><td class="term">Monday</td><td>AI is something you type questions into</td><td>Understanding what an agent actually does</td></tr>
+          <tr><td class="term">Tuesday</td><td>Never opened a terminal</td><td>Your own commands and skills, running</td></tr>
+          <tr><td class="term">Wednesday</td><td>One agent at a time</td><td>Three agents building a web page together</td></tr>
+          <tr><td class="term">Today</td><td>—</td><td>A working application with a database</td></tr>
+        </table>
+      </div>
+      <aside class="notes">Some of this room had never opened a terminal on Monday. Say that out loud - it is true, and it is the most convincing evidence they can offer their own students.</aside>
+    </section>
+
+    <!-- ===== 32 MONDAY ===== -->
+    <section class="slide" data-notes-timing="1:48">
+      <div class="slide-content">
+        <div class="kicker">What happens next</div>
+        <h1 class="headline">This works on Monday morning</h1>
+        <div class="card-row cols-3">
+          <div class="card accent-teal"><div class="card-title">Nothing expires</div><p class="card-body">Free tools, your own key. Everything on your laptop keeps working.</p></div>
+          <div class="card accent-terracotta"><div class="card-title">Start small with students</div><p class="card-body">The Day 3 web page is the right first lesson — visible, quick, and hard to get badly wrong.</p></div>
+          <div class="card"><div class="card-title">Your guides stay</div><p class="card-body">Every command and file from this week is written out in them.</p></div>
+        </div>
+      </div>
+      <aside class="notes">Be concrete about the first lesson. Teachers leave workshops full of enthusiasm and then stall on where to begin - recommending the Day 3 page removes that decision.</aside>
+    </section>
+
+    <!-- ===== 33 CLOSE ===== -->
+    <section class="slide slide-section" data-notes-timing="1:50">
+      <div class="slide-content">
+        <div class="section-num">Thank you</div>
+        <h1>Now go and hand it forward</h1>
+        <div class="section-sub">You came in able to ask an AI a question. You're leaving able to direct one to build working software — using the same skills a professional team uses. The only thing left is to teach someone else, which is what you were always going to do.</div>
+      </div>
+      <aside class="notes">Close, then leave real time for questions. Encourage them to show each other what they built before they pack up - the room comparing apps is the best possible ending.</aside>
+    </section>
+
+  </div>
+</div>
+
+<div class="deck-chrome">
+  <button class="chrome-btn" id="notesToggle" title="Toggle speaker notes (n)">Notes [n]</button>
+  <button class="chrome-btn" id="fsToggle" title="Fullscreen (f)">Fullscreen [f]</button>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="nav-hint" id="navHint">← → to navigate · f fullscreen · n notes</div>
+
+<div class="notes-panel" id="notesPanel">
+  <h3 id="notesTiming">Speaker notes</h3>
+  <p id="notesText"></p>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var current = 0;
+
+  var progressFill = document.getElementById('progressFill');
+  var notesPanel = document.getElementById('notesPanel');
+  var notesText = document.getElementById('notesText');
+  var notesTiming = document.getElementById('notesTiming');
+  var navHint = document.getElementById('navHint');
+  var stage = document.getElementById('stage');
+
+  function renderNotes(index) {
+    var slide = slides[index];
+    var aside = slide.querySelector('aside.notes');
+    var timing = slide.getAttribute('data-notes-timing') || '';
+    notesTiming.textContent = 'Slide ' + (index + 1) + ' / ' + total + (timing ? '  ·  ' + timing : '');
+    notesText.textContent = aside ? aside.textContent.trim() : '(no notes for this slide)';
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total) return;
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    progressFill.style.width = ((current + 1) / total * 100) + '%';
+    renderNotes(current);
+    history.replaceState(null, '', '#' + (current + 1));
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+    else if (e.key.toLowerCase() === 'n') { notesPanel.classList.toggle('open'); }
+    else if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
+    else if (e.key === 'Escape') { notesPanel.classList.remove('open'); }
+    navHint.classList.add('hide');
+  });
+
+  document.getElementById('notesToggle').addEventListener('click', function () {
+    notesPanel.classList.toggle('open');
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      stage.requestFullscreen && stage.requestFullscreen();
+    } else {
+      document.exitFullscreen && document.exitFullscreen();
+    }
+  }
+  document.getElementById('fsToggle').addEventListener('click', toggleFullscreen);
+
+  stage.addEventListener('click', function (e) {
+    if (window.innerWidth <= 700) return;
+    var rect = stage.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    if (x > rect.width / 2) next(); else prev();
+  });
+
+  var hash = parseInt((location.hash || '').replace('#', ''), 10);
+  if (!isNaN(hash) && hash >= 1 && hash <= total) {
+    goTo(hash - 1);
+  } else {
+    renderNotes(0);
+  }
+
+  setTimeout(function () { navHint.classList.add('hide'); }, 4500);
+})();
+</script>
+</body>
+</html>

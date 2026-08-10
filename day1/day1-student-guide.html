@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 Student Guide — Building with AI Coding Assistants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F1E6;
+    --paper-alt: #FBF7EF;
+    --white: #FFFDF8;
+    --ink: #2A2521;
+    --ink-soft: #6B6156;
+    --ink-faint: #9A8F7F;
+    --line: #E4D9C7;
+    --terracotta: #C1592A;
+    --terracotta-deep: #9E4620;
+    --terracotta-soft: #F0D3C2;
+    --teal: #35706A;
+    --teal-deep: #244E4A;
+    --teal-soft: #D6E6E2;
+    --gold: #C9932F;
+    --gold-soft: #F5E4C3;
+    --gold-ink: #4A3D22;
+    --radius: 14px;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Karla", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.62;
+    font-size: 16px;
+  }
+
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 26px 120px; }
+
+  /* ============ MASTHEAD ============ */
+  .masthead {
+    background: var(--teal-deep);
+    color: var(--paper-alt);
+    padding: 58px 26px 68px;
+    background-image: radial-gradient(circle at 85% 10%, rgba(193,89,42,0.25), transparent 45%);
+  }
+  .masthead-inner { max-width: 820px; margin: 0 auto; }
+  .masthead .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta-soft);
+    background: rgba(193,89,42,0.18);
+    display: inline-block;
+    padding: 0.4em 0.9em;
+    border-radius: 999px;
+    margin-bottom: 1.1em;
+  }
+  .masthead h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.08;
+    margin: 0 0 0.32em 0;
+    letter-spacing: -0.01em;
+  }
+  .masthead .sub { font-size: 17px; color: var(--teal-soft); max-width: 36em; margin: 0; }
+  .fields-row {
+    display: flex; gap: 2.4em; margin-top: 2em;
+    font-family: var(--font-mono); font-size: 12.5px; color: rgba(251,247,239,0.65);
+  }
+  .fields-row .field-line {
+    border-bottom: 1px dashed rgba(251,247,239,0.4);
+    padding-bottom: 3px; min-width: 170px; display: inline-block;
+  }
+
+  /* ============ HOW TO USE ============ */
+  .howto {
+    margin-top: -36px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    box-shadow: 0 14px 34px rgba(42,37,33,0.1);
+  }
+  .howto h2 {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--terracotta-deep); margin: 0 0 0.8em 0;
+  }
+  .howto p { margin: 0 0 0.7em 0; font-size: 15px; }
+  .howto p:last-child { margin-bottom: 0; }
+
+  /* ============ AGENDA ============ */
+  .agenda { margin-top: 26px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; }
+  .agenda h2 {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--terracotta-deep); margin: 0 0 0.9em 0;
+  }
+  .agenda-row { display: flex; gap: 14px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .agenda-row:last-child { border-bottom: none; }
+  .agenda-time { font-family: var(--font-mono); color: var(--ink-faint); min-width: 52px; flex-shrink: 0; }
+  .part-tag {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--teal-deep);
+    background: var(--teal-soft); padding: 1px 7px; border-radius: 999px; margin-right: 8px;
+  }
+
+  /* ============ SECTIONS ============ */
+  section.block { margin-top: 60px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .section-index { font-family: var(--font-display); font-size: 15px; color: var(--terracotta); font-weight: 600; }
+  h2.block-title {
+    font-family: var(--font-display); font-size: clamp(25px, 3.6vw, 34px);
+    font-weight: 600; margin: 0; letter-spacing: -0.01em; line-height: 1.15;
+  }
+  .block-lede { color: var(--ink-soft); font-size: 16px; margin: 8px 0 24px 0; max-width: 46em; }
+
+  h3.sub-title {
+    font-family: var(--font-display); font-size: 20.5px; font-weight: 600;
+    margin: 34px 0 10px 0; line-height: 1.25;
+  }
+  h4.mini-title {
+    font-family: var(--font-body); font-size: 16px; font-weight: 700;
+    margin: 22px 0 8px 0; color: var(--ink);
+  }
+
+  p { font-size: 16px; margin: 0 0 15px 0; }
+  strong { color: var(--ink); font-weight: 700; }
+  em { font-style: italic; }
+
+  ul.plain, ol.plain { padding-left: 1.35em; margin: 0 0 16px 0; }
+  ul.plain li, ol.plain li { margin-bottom: 9px; }
+
+  code.inline {
+    font-family: var(--font-mono); font-size: 0.88em;
+    background: #EFE7D8; border: 1px solid var(--line);
+    padding: 0.1em 0.42em; border-radius: 5px; color: var(--terracotta-deep);
+    overflow-wrap: anywhere;
+  }
+
+  /* ============ COMPARE ============ */
+  .compare-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 22px 0; }
+  .compare-box { border-radius: 11px; padding: 15px 17px; }
+  .compare-box.weak { background: #FBEDE6; border: 1px solid var(--terracotta-soft); }
+  .compare-box.strong { background: #EBF3F1; border: 1px solid var(--teal-soft); }
+  .compare-box .tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700; display: block; margin-bottom: 8px;
+  }
+  .compare-box.weak .tag { color: var(--terracotta-deep); }
+  .compare-box.strong .tag { color: var(--teal-deep); }
+  .compare-box p { font-size: 14.5px; margin: 0 0 8px 0; line-height: 1.5; }
+  .compare-box p:last-child { margin-bottom: 0; }
+  .compare-box p.mono { font-family: var(--font-mono); font-size: 13.5px; }
+
+  /* ============ FILE / TERMINAL WINDOW ============ */
+  .device-window {
+    background: #211C17; border-radius: 11px; overflow: hidden;
+    box-shadow: 0 10px 24px rgba(42,37,33,0.22); margin: 16px 0;
+  }
+  .window-header {
+    display: flex; align-items: center; gap: 8px; padding: 0.55em 0.9em;
+    background: #16130F; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .window-dots { display: flex; gap: 5px; }
+  .window-dots span { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .window-dots span:nth-child(1) { background: #E0796B; }
+  .window-dots span:nth-child(2) { background: #E8C15E; }
+  .window-dots span:nth-child(3) { background: #7FB88F; }
+  .window-filename { font-family: var(--font-mono); font-size: 12px; color: var(--paper-alt); opacity: 0.8; }
+  .window-body {
+    padding: 14px 18px; font-family: var(--font-mono); font-size: 13.5px;
+    line-height: 1.65; color: var(--paper-alt); white-space: pre-wrap; overflow-x: auto;
+  }
+  .window-body .k { color: #E8B79A; }
+  .window-body .c { color: #9A8F7F; }
+  .window-body .prompt { color: #8FC49A; }
+  .window-body .out { color: var(--paper-alt); opacity: 0.84; }
+
+  /* ===== TOKEN CHIPS ===== */
+  .token-row { margin: 14px 0 18px 0; }
+  .token-label { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 7px; }
+  .token-strip { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .tok {
+    font-family: var(--font-mono); font-size: 14px;
+    padding: 4px 8px; border-radius: 6px;
+    border: 1px solid var(--terracotta-soft); background: #FDF2EA;
+    color: var(--ink); white-space: pre;
+  }
+  .tok.alt { border-color: var(--teal-soft); background: #EDF6F4; }
+  .token-count {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    color: var(--terracotta-deep); margin-left: 6px; white-space: nowrap;
+  }
+
+  /* ============ ANNOTATIONS ============ */
+  ol.anno-list { list-style: none; margin: 0 0 18px 0; padding: 0; }
+  ol.anno-list li { display: flex; gap: 12px; margin-bottom: 11px; font-size: 15px; line-height: 1.5; }
+  .anno-num {
+    flex-shrink: 0; background: var(--terracotta); color: #fff; font-family: var(--font-mono);
+    font-size: 12px; font-weight: 700; width: 24px; height: 24px; line-height: 24px;
+    border-radius: 50%; text-align: center; margin-top: 2px;
+  }
+  ol.anno-list strong { display: block; }
+
+  /* ============ ANALOGY ============ */
+  .analogy {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: var(--radius); padding: 15px 18px; margin: 18px 0;
+  }
+  .analogy .analogy-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; font-weight: 700; color: #8A6516; flex-shrink: 0; padding-top: 3px;
+  }
+  .analogy p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--gold-ink); }
+
+  /* ============ CALLOUT ============ */
+  .callout {
+    background: var(--teal-deep); color: var(--paper-alt);
+    border-radius: var(--radius); padding: 18px 22px; margin: 22px 0;
+  }
+  .callout .callout-tag {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--terracotta-soft); margin-bottom: 7px; display: block;
+  }
+  .callout p { margin: 0 0 10px 0; color: var(--paper-alt); font-size: 15.5px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .warn-box {
+    background: #FBEDE6; border: 1px solid var(--terracotta-soft);
+    border-left: 4px solid var(--terracotta); border-radius: 10px;
+    padding: 15px 18px; margin: 20px 0;
+  }
+  .warn-box .warn-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; font-weight: 700; color: var(--terracotta-deep); display: block; margin-bottom: 6px;
+  }
+  .warn-box p { margin: 0; font-size: 15px; }
+
+  /* ============ TABLES ============ */
+  .table-scroll { overflow-x: auto; margin: 18px 0 22px 0; }
+  table.guide-table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 480px; }
+  table.guide-table th {
+    font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 10.5px; color: var(--ink-faint); text-align: left;
+    padding: 9px 12px; border-bottom: 2px solid var(--line); white-space: nowrap;
+  }
+  table.guide-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.48; }
+  table.guide-table tr:last-child td { border-bottom: none; }
+  table.guide-table td.term { font-weight: 700; white-space: nowrap; }
+  table.guide-table td.mono, table.guide-table td .mono {
+    font-family: var(--font-mono); font-size: 13px; color: var(--terracotta-deep); white-space: nowrap;
+  }
+  table.guide-table tbody tr:nth-child(even) { background: rgba(255,253,248,0.6); }
+
+  /* ============ CHECKLIST ============ */
+  ul.checklist { list-style: none; padding: 0; margin: 16px 0 20px 0; }
+  ul.checklist li {
+    position: relative; padding-left: 34px; margin-bottom: 11px; font-size: 15.5px; line-height: 1.5;
+  }
+  ul.checklist li::before {
+    content: ""; position: absolute; left: 0; top: 2px;
+    width: 19px; height: 19px; border: 2px solid var(--teal);
+    border-radius: 5px; background: var(--white);
+  }
+
+  /* ============ RECAP ============ */
+  .recap-list { display: grid; gap: 12px; margin: 18px 0; }
+  .recap-item {
+    display: flex; gap: 15px; align-items: flex-start; background: var(--white);
+    border: 1px solid var(--line); border-radius: 11px; padding: 15px 18px;
+  }
+  .recap-item .num {
+    font-family: var(--font-display); font-weight: 700; font-size: 22px;
+    color: var(--terracotta); flex-shrink: 0; line-height: 1.2;
+  }
+  .recap-item p { margin: 0; font-size: 15.5px; }
+
+  hr.divider { border: none; border-top: 1px solid var(--line); margin: 52px 0; }
+
+  footer.page-footer {
+    text-align: center; font-family: var(--font-mono); font-size: 11.5px;
+    color: var(--ink-faint); margin-top: 64px;
+  }
+
+  @media (max-width: 700px) {
+    .compare-pair { grid-template-columns: 1fr; }
+    .fields-row { flex-direction: column; gap: 10px; }
+    .masthead { padding: 42px 18px 54px; }
+    .wrap { padding: 0 17px 90px; }
+    .howto { margin-top: -26px; padding: 18px; }
+    ol.anno-list li { font-size: 14.5px; }
+  }
+
+  @media print {
+    body { background: white; font-size: 11.5pt; }
+    .masthead, .callout, .analogy, .warn-box, .compare-box, .device-window {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    section.block { page-break-inside: avoid; }
+    .device-window { page-break-inside: avoid; }
+    hr.divider { margin: 30px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <span class="eyebrow">Day 1 of 4 · Student Guide</span>
+    <h1>Building with AI Coding Assistants</h1>
+    <p class="sub">Foundations — what AI really is, what a coding agent really does, and the words you'll need for the rest of the week. Written for someone who has never done any of this before.</p>
+    <div class="fields-row">
+      <span>Name: <span class="field-line">&nbsp;</span></span>
+      <span>Date: <span class="field-line">&nbsp;</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="howto">
+    <h2>How to use this guide</h2>
+    <p><strong>You don't need a laptop today.</strong> Day 1 is watching, understanding and asking questions. Everything here is written out so you don't have to take notes — just follow along and mark anything you want to ask about.</p>
+    <p>This guide goes further than the slides on purpose. It repeats everything said in the room, then adds the reference material you'll want later: the terminal commands, how to tell whether something worked, and what the common error messages actually mean.</p>
+    <p><strong>Keep this.</strong> Sections 5, 6 and 7 at the end are the ones you'll come back to during Days 2, 3 and 4.</p>
+  </div>
+
+  <div class="agenda">
+    <h2>Today's flow — 2 hours</h2>
+    <div class="agenda-row"><span class="agenda-time">0:00</span><span>Welcome, what success looks like, the week ahead</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:10</span><span><span class="part-tag">Part 1</span>AI &amp; Generative AI — how it works, and what tokens are</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:26</span><span><span class="part-tag">Part 2</span>Coding Agents — the terminal, a real session, live demo</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:53</span><span><span class="part-tag">Part 3</span>Prompting — six techniques, with good and bad examples</span></div>
+    <div class="agenda-row"><span class="agenda-time">1:16</span><span><span class="part-tag">Part 4</span>The five words: AGENTS.md, Commands, Skills, Sub-agents, MCP</span></div>
+    <div class="agenda-row"><span class="agenda-time">1:37</span><span>Limitations, recap, and what happens tomorrow</span></div>
+  </div>
+
+  <!-- ================= PART 1 ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 1</span></div>
+    <h2 class="block-title">AI &amp; Generative AI</h2>
+    <p class="block-lede">Before we talk about agents, let's be precise about what the thing underneath them actually is — and what it isn't.</p>
+
+    <h3 class="sub-title">Ordinary software follows rules. AI learns patterns.</h3>
+    <p>This one difference explains everything that follows. Ordinary software does exactly what a human being wrote down in advance. If a situation comes up that the programmer didn't think of, the software has no answer.</p>
+    <p>AI software is built differently. Nobody writes the rules. Instead the system is shown an enormous number of examples and works out the patterns for itself — which means it can handle situations nobody specifically prepared it for.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Ordinary software</span>
+        <p>A person writes every rule by hand:</p>
+        <p class="mono">IF subject contains "lottery"<br>THEN mark as spam</p>
+        <p>A new kind of spam arrives that doesn't mention lottery. It goes straight to the inbox, because no rule covers it.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">AI software</span>
+        <p>Nobody writes any rules. The system is shown thousands of emails already labelled spam or not-spam, and works out for itself what spam tends to look like.</p>
+        <p>The new kind of spam still gets caught, because it <em>resembles the pattern</em> — even though no human described it.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">What the word "generative" adds</h3>
+    <p>Older AI systems mostly <strong>decide</strong> something: which category, which label, yes or no. Generative AI <strong>creates</strong> something that did not exist before. The difference is the shape of what comes out.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Type</th><th>You ask</th><th>You get back</th></tr></thead>
+        <tbody>
+          <tr><td class="term">Deciding AI</td><td>"Is this email spam?"</td><td>Yes, or no. A choice from a fixed set.</td></tr>
+          <tr><td class="term">Deciding AI</td><td>"What language is this?"</td><td>Sinhala. Again — a choice.</td></tr>
+          <tr><td class="term">Generative AI</td><td>"Write a reply to this parent."</td><td>A complete paragraph that never existed before.</td></tr>
+          <tr><td class="term">Generative AI</td><td>"Build me a webpage."</td><td>Working code that never existed before.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Everything we do this week lives in that bottom half of the table.</p>
+
+    <h3 class="sub-title">How it actually works: predicting the next piece</h3>
+    <p>This is worth understanding properly, because it explains both why generative AI is impressive and why it sometimes gets things wrong.</p>
+    <p>A generative AI is <strong>not</strong> looking answers up in a database. It has read an enormous quantity of text and learned which words tend to follow which other words. When you ask it something, it predicts the most likely next word — then, having written that, predicts the next one, and so on.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">how a sentence gets built</span>
+      </div>
+      <div class="window-body"><span class="out">"The capital of Sri Lanka is </span><span class="k">Sri</span><span class="out"> … </span><span class="k">Jayawardenepura</span><span class="out"> … </span><span class="k">Kotte</span><span class="out">"</span>
+
+<span class="c">each word chosen as "most likely to come next", given everything before it</span></div>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">Why this matters all week</span>
+      <p>Because it produces what <em>sounds</em> most likely rather than looking up a verified fact, it can occasionally state something wrong with complete confidence. This isn't a fault you caused — it's a property of how the technology works. It's the reason you always check the result yourself.</p>
+    </div>
+
+    <h3 class="sub-title">Those pieces have a name: tokens</h3>
+    <p>An AI model doesn't see letters, and it doesn't see whole sentences. It breaks text into chunks called <strong>tokens</strong>. A common word is usually one token; a longer or less common word gets split into several pieces.</p>
+
+    <div class="token-row">
+      <div class="token-label">A simple sentence — every common word is one token</div>
+      <div class="token-strip">
+        <span class="tok">The</span><span class="tok alt">cat</span><span class="tok">sat</span><span class="tok alt">on</span><span class="tok">the</span><span class="tok alt">mat</span><span class="tok">.</span>
+        <span class="token-count">7 tokens</span>
+      </div>
+    </div>
+
+    <div class="token-row">
+      <div class="token-label">A longer word gets broken into pieces</div>
+      <div class="token-strip">
+        <span class="tok">Photo</span><span class="tok alt">synth</span><span class="tok">esis</span><span class="tok alt">is</span><span class="tok">fascinating</span><span class="tok alt">.</span>
+        <span class="token-count">6 tokens</span>
+      </div>
+    </div>
+
+    <p>As a rough guide, <strong>4 characters ≈ 1 token</strong>, so about <strong>750 words ≈ 1,000 tokens</strong>. The exact split differs between AI models. You never need to count tokens yourself — but it helps to know the unit exists, because everything else is measured in it.</p>
+
+    <h3 class="sub-title">Tokens in, tokens out</h3>
+    <p>Your question is turned into tokens before the model ever sees it. The model then produces its answer one token at a time, and those are turned back into words on your screen. That is the whole cycle:</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td class="term">You type</td><td>"Explain photosynthesis"</td></tr>
+          <tr><td class="term">Input tokens</td><td>Your words are chopped into tokens the model can read.</td></tr>
+          <tr><td class="term">The model</td><td>Predicts the next token, over and over.</td></tr>
+          <tr><td class="term">Output tokens</td><td>Those tokens become the answer you read — which is why answers appear word by word rather than all at once.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">Why you'll care on Day 2</span>
+      <p>Everything is measured in tokens, including the free allowance we all use this week. When your agent pauses and mentions a <strong>rate limit</strong>, it means too many tokens were sent too quickly. Nothing is broken — you now know exactly what that message means.</p>
+    </div>
+
+    <h3 class="sub-title">Where you already see it</h3>
+    <ul class="plain">
+      <li><strong>Text</strong> — lesson plans, exam questions, letters to parents, report comments, translations.</li>
+      <li><strong>Images</strong> — illustrations for worksheets, diagrams, slide backgrounds, poster art.</li>
+      <li><strong>Code</strong> — working software: websites, apps, databases. This is our focus for the rest of the week.</li>
+    </ul>
+    <p>Here's something that surprises people: <strong>code is one of the things generative AI is best at.</strong> Code has strict, checkable rules — the machine can run what it wrote and immediately find out whether it worked. An essay has no such test. That ability to check its own work is exactly what makes coding agents possible.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= PART 2 ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 2</span></div>
+    <h2 class="block-title">Coding Agents</h2>
+    <p class="block-lede">The heart of today. We go slowly here — most people have never seen one of these work, so we look at what it does before we name anything.</p>
+
+    <h3 class="sub-title">The problem with chat AI</h3>
+    <p>Suppose you ask ChatGPT to build a page for your school's sports day. It will happily write the code. But look at what you personally still have to do afterwards.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">With chat AI — eight steps, all yours</span>
+        <p>1. It prints code into the chat window.<br>
+        2. You select and copy it.<br>
+        3. You open a text editor.<br>
+        4. You paste it, and save it with exactly the right filename in exactly the right folder.<br>
+        5. You open it in a browser.<br>
+        6. Something looks wrong.<br>
+        7. You copy the error message back into the chat.<br>
+        8. Repeat, several times.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">With a coding agent — one step</span>
+        <p>1. You say what you want.</p>
+        <p>It creates the file itself, in the right folder, with the right name. It runs it. If something breaks, it reads its own error message and fixes it — then tells you it's finished.</p>
+        <p><strong>You never left the one window.</strong></p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">First, what a terminal is</h3>
+    <p>Coding agents live in a plain text window called the <strong>terminal</strong> — on Windows it may be called Command Prompt, PowerShell or Terminal; on a Mac it's called Terminal. If you have never opened one, that's completely normal and nothing to be embarrassed about.</p>
+    <p>It is simply a different way of asking your computer to do things.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">The way you already know — pointing</span>
+        <p>You see folders and icons on screen. You move the mouse, double-click, and drag things around to make things happen.</p>
+        <p><strong>You point at what you want.</strong></p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">The terminal — typing</span>
+        <p>The same computer, the same files, the same folders. But instead of clicking, you type a line describing what you want, and press Enter.</p>
+        <p><strong>You describe what you want.</strong></p>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">Don't worry</span>
+      <p>You will not need to memorise commands. Tomorrow we practise the handful you actually need — they're listed in Section 5 of this guide — and after that, your agent does nearly all the typing for you.</p>
+    </div>
+
+    <h3 class="sub-title">A real session, line by line</h3>
+    <p>Here is what a short conversation with a coding agent looks like. Read it top to bottom; the notes underneath explain each part.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">terminal</span>
+      </div>
+      <div class="window-body"><span class="prompt">&gt; build a page that shows today's date and a friendly greeting</span>
+
+<span class="out">Reading your project…</span>
+<span class="out">Creating index.html…</span>
+<span class="out">Writing the greeting logic…</span>
+<span class="out">Running it…</span>
+<span class="c">   ⚠ Error: greeting is not defined</span>
+<span class="out">Fixing…</span>
+
+<span class="k">✓ Done — open http://localhost:3000</span></div>
+    </div>
+
+    <ol class="anno-list">
+      <li><span class="anno-num">1</span><div><strong>You type plain English.</strong>No code, no special syntax, no memorised keywords. Exactly how you'd ask a colleague to do something.</div></li>
+      <li><span class="anno-num">2</span><div><strong>It looks around first.</strong>"Reading your project" means it opens what's already in your folder, so its work fits with what's there rather than guessing.</div></li>
+      <li><span class="anno-num">3</span><div><strong>It creates real files.</strong>After "Creating index.html", that file genuinely exists on your computer. Nothing was copied or pasted by you.</div></li>
+      <li><span class="anno-num">4</span><div><strong>It hit an error — and fixed it.</strong>This is the part chat AI cannot do. It ran the code, saw its own mistake, and corrected it without being asked. This is the single biggest difference.</div></li>
+      <li><span class="anno-num">5</span><div><strong>It tells you how to check.</strong>The last line gives you an address to open in your browser so you can confirm with your own eyes that it worked.</div></li>
+    </ol>
+
+    <h3 class="sub-title">The loop underneath everything</h3>
+    <p>What you just read follows the same four steps every time — whether the task takes ten seconds or an hour.</p>
+    <ol class="plain">
+      <li><strong>You describe</strong> what you want, in ordinary language.</li>
+      <li><strong>It plans</strong> — works out which steps are needed and in what order.</li>
+      <li><strong>It acts</strong> — writes files, runs them, reads any errors, fixes them.</li>
+      <li><strong>You check</strong> — is this actually what you wanted?</li>
+    </ol>
+    <p>Then it goes round again. If you're not happy, you don't start over: you say what's wrong, and the loop repeats from step one. <strong>The agent never decides it's finished — you do.</strong></p>
+
+    <h3 class="sub-title">What the agent is actually allowed to do</h3>
+    <p>A chat window can only produce text on a screen. An agent is that same AI, plus permission to touch your computer in four specific ways.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Power</th><th>What that means in practice</th></tr></thead>
+        <tbody>
+          <tr><td class="term">Read</td><td>Open and understand files already in your project, so new work fits with what exists.</td></tr>
+          <tr><td class="term">Write</td><td>Create new files and edit existing ones, directly on your machine.</td></tr>
+          <tr><td class="term">Run</td><td>Actually execute what it wrote — start the program, open the page, run the tests.</td></tr>
+          <tr><td class="term">Observe</td><td>See the result or the error message that came back, and use it to correct itself.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>That fourth one is what makes it feel like a colleague rather than a tool: it closes its own loop.</p>
+
+    <div class="callout">
+      <span class="callout-tag">A fair question</span>
+      <p>"Is it safe to let a program write files on my computer?" Yes, with two protections: it works inside the project folder you started it in, and it asks your permission before anything significant. You can always see exactly what it changed. We cover this properly tomorrow.</p>
+    </div>
+
+    <h3 class="sub-title">The tools you'll hear about</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Name</th><th>Made by</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="term">Claude Code</td><td>Anthropic</td><td>Terminal-based. Widely used by professional developers.</td></tr>
+          <tr><td class="term">Gemini</td><td>Google</td><td>The AI model we'll use this week, through a free key.</td></tr>
+          <tr><td class="term">Codex</td><td>OpenAI</td><td>From the makers of ChatGPT.</td></tr>
+          <tr><td class="term">Copilot</td><td>GitHub</td><td>Lives inside a code editor rather than the terminal.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>They all work on the same loop. Learning one means you can pick up any of them — which matters, because the tool your school uses in two years may not be the one we use this week.</p>
+
+    <h3 class="sub-title">What we'll use: OpenCode with a free Gemini key</h3>
+    <p>Two separate pieces, and it's worth knowing why they're separate:</p>
+    <ul class="plain">
+      <li><strong>OpenCode</strong> — the agent itself. The program that runs the loop in your terminal. Open source and free.</li>
+      <li><strong>A Gemini API key</strong> — the AI brain it talks to. You create your own from Google, with no credit card required.</li>
+    </ul>
+    <div class="analogy">
+      <span class="analogy-tag">Why two pieces</span>
+      <p>Because the agent and the brain are separate, a better AI model appearing next year doesn't mean relearning everything. You keep the same tool and point it somewhere new — and so can your students.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= PART 3 ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 3</span></div>
+    <h2 class="block-title">Prompting — asking so you get what you wanted</h2>
+    <p class="block-lede">The agent is only ever as good as the instruction you give it. This is the most immediately useful part of today — it will improve your ChatGPT results tonight, not just your coding next week.</p>
+
+    <h3 class="sub-title">You are briefing an assistant, not searching Google</h3>
+    <p>With a search engine, fewer words is better — you're matching keywords, and you'll pick from a list of results yourself. With an AI, the opposite is true. There is no list to choose from: it builds exactly one thing, so it needs to know which one.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Search habit</span>
+        <p class="mono">sports day page</p>
+        <p>Three words is plenty, because you'll scan ten results and choose.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Briefing habit</span>
+        <p class="mono">"A page for our sports day on the 12th, with the event list, start times, and house colours down the side."</p>
+        <p>It makes one thing. Detail is what makes it the right one.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">The same request, two ways</h3>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Weak prompt</span>
+        <p class="mono">"Make a form"</p>
+        <p><strong>What comes back:</strong> some form, with some fields, styled some way. Probably not yours. You now spend ten minutes correcting it.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Strong prompt</span>
+        <p class="mono">"Make a form with name, date and amount fields. Show an error if amount is blank. Keep the styling simple — no frameworks."</p>
+        <p><strong>What comes back:</strong> close to right, first time.</p>
+      </div>
+    </div>
+    <p>Three extra sentences saved ten minutes of correcting. That's the entire argument for learning to prompt well.</p>
+
+    <h3 class="sub-title">What made that prompt work: four parts</h3>
+    <p>Take the strong version apart and you'll find four distinct pieces. If a prompt of yours disappoints, one of these is usually missing.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">anatomy of a good prompt</span>
+      </div>
+      <div class="window-body"><span class="k">1</span> <span class="out">Make a form</span>
+<span class="k">2</span> <span class="out">with name, date and amount fields.</span>
+<span class="k">3</span> <span class="out">Show an error if amount is blank.</span>
+<span class="k">4</span> <span class="out">Keep the styling simple — no frameworks.</span></div>
+    </div>
+
+    <ol class="anno-list">
+      <li><span class="anno-num">1</span><div><strong>The task</strong>What you want made. Most people stop here — this is the whole prompt for most beginners.</div></li>
+      <li><span class="anno-num">2</span><div><strong>The specifics</strong>The exact pieces it should contain. Removes all the guessing.</div></li>
+      <li><span class="anno-num">3</span><div><strong>The behaviour</strong>What should happen in a particular situation — a rule, not just a thing.</div></li>
+      <li><span class="anno-num">4</span><div><strong>The boundary</strong>What <em>not</em> to do. Frequently the most valuable line in the whole prompt.</div></li>
+    </ol>
+
+    <h4 class="mini-title">A template you can reuse</h4>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">fill-in-the-blanks prompt</span>
+      </div>
+      <div class="window-body"><span class="out">Build </span><span class="k">[what]</span><span class="out">
+with </span><span class="k">[the specific parts it needs]</span><span class="out">.
+When </span><span class="k">[situation]</span><span class="out">, it should </span><span class="k">[behaviour]</span><span class="out">.
+Don't </span><span class="k">[boundary]</span><span class="out">.</span></div>
+    </div>
+
+    <h3 class="sub-title">Six named techniques</h3>
+    <p>These are the standard techniques people mean when they say "prompt engineering". You already use some by instinct. Knowing the names means you can read any article about AI and follow it — and teach them to your students by name.</p>
+
+    <h4 class="mini-title">1. Zero-Shot — just ask, no examples</h4>
+    <p>What everyone already does. Excellent for small tasks with only one sensible answer shape; quietly disappointing when you had a particular format in mind but never said so.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Where it lets you down</span>
+        <p class="mono">"Write 5 quiz questions on photosynthesis."</p>
+        <p>You get five questions — in whatever format and difficulty it chose. You didn't say, so it guessed.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Where it shines</span>
+        <p class="mono">"Summarise this paragraph in one sentence."</p>
+        <p>Simple and unambiguous. No examples needed.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">2. Few-Shot — show two or three examples</h4>
+    <p>The fastest way to get output in <em>your</em> style is to show your style rather than describe it. Keep two model questions in a file, ready to paste.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Describing your style</span>
+        <p class="mono">"Write quiz questions in my usual style."</p>
+        <p>It has never seen your papers. It cannot know what your usual style is.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Showing your style</span>
+        <p class="mono">"Here are two of my questions:<br><br>1. State two uses of a spreadsheet. (2 marks)<br>2. Explain why a formula begins with =. (3 marks)<br><br>Now write three more in exactly this style."</p>
+        <p>Marks, numbering and phrasing all get copied automatically.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">3. Role / Persona — tell it who to be</h4>
+    <p>Two sentences about who is speaking and who is listening changes the vocabulary, the depth and the examples it picks. The audience half matters more than the role half.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">No role given</span>
+        <p class="mono">"Explain photosynthesis."</p>
+        <p>A competent encyclopaedia paragraph, pitched at nobody in particular.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Role and audience given</span>
+        <p class="mono">"You are a Grade 8 science teacher in Sri Lanka. Explain photosynthesis to a 13-year-old using an example from a home garden. Under 150 words, no technical terms."</p>
+        <p>Now it is pitched at your actual class.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">4. Chain-of-Thought — make it show its working</h4>
+    <p>Remember it predicts one token at a time. If you let it jump straight to an answer, it commits before it has reasoned. Asking for the steps first makes it reason on the way. Use this for anything with numbers, logic or marking.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Straight to the verdict</span>
+        <p class="mono">"A student answered 47 for this problem. Is that correct?"</p>
+        <p>A confident yes or no — sometimes the wrong one.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Working first, verdict after</span>
+        <p class="mono">"Solve this problem yourself, step by step. Then compare your answer with the student's 47, and tell me exactly where they went wrong."</p>
+        <p>A better answer — and an explanation you can mark from.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">5. Least-to-Most — build up in small steps</h4>
+    <p>For anything large, one giant request produces something shallow. Asking in sequence, where each answer feeds the next, produces something usable. This is the seed of the whole Day 2 and Day 4 workflow.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">One giant ask</span>
+        <p class="mono">"Create a full term scheme of work for Grade 10 ICT."</p>
+        <p>Generic, thin, and wrong in ways that are tedious to correct.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Three asks, in order</span>
+        <p class="mono">1. "List the topics for a 10-week Grade 10 ICT term."<br><br>2. "For topic 1, list the learning outcomes."<br><br>3. "Now write week 1's lesson plan using those outcomes."</p>
+        <p>Each step checked before the next one starts.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">6. Interview Style — make it ask you first</h4>
+    <p>The most counter-intuitive, and often the best. Instead of describing everything up front, hand the questioning over and let it find the gaps. This is exactly what the idea-refine skill does on Day 2 and Day 4.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">You guess what matters</span>
+        <p class="mono">"Make me a revision worksheet on spreadsheets."</p>
+        <p>It fills every gap with an assumption — year group, length, difficulty, format.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">It finds the gaps for you</span>
+        <p class="mono">"Before you write anything, ask me five questions that would help you make this worksheet well. Then wait for my answers."</p>
+        <p>The gaps get found before the work, not after.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">Which one, when</h4>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Technique</th><th>Reach for it when…</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td class="term">Zero-Shot</td><td>The task is small and there's one sensible answer shape</td><td>Summarise, translate, tidy up</td></tr>
+          <tr><td class="term">Few-Shot</td><td>The output must match <em>your</em> format or style</td><td>Exam questions, report comments</td></tr>
+          <tr><td class="term">Role / Persona</td><td>The pitch and audience matter</td><td>Explaining a topic to a year group</td></tr>
+          <tr><td class="term">Chain-of-Thought</td><td>There's reasoning, numbers or marking involved</td><td>Checking a student's working</td></tr>
+          <tr><td class="term">Least-to-Most</td><td>The job is too big for one request</td><td>Schemes of work, whole projects</td></tr>
+          <tr><td class="term">Interview Style</td><td>You're not certain what you want yet</td><td>Starting anything from scratch</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>You'll live in the first three. The last three come out when the job is bigger, or when the answer really has to be right.</p>
+
+    <h3 class="sub-title">Treat the first answer as a first draft</h3>
+    <p>Even an excellent prompt often lands at about eighty percent. That is not failure — it's the normal working rhythm, and it's far faster than starting from a blank page.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">What beginners do</span>
+        <p>The result isn't right, so they delete everything and rewrite the whole request from scratch.</p>
+        <p>Slow — and it throws away the eighty percent that was fine.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">What to do instead</span>
+        <p class="mono">"Close. The date field should come first, and the error message should be red."</p>
+        <p>Keeps the good part. Fixes only what's wrong.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">The rule for the whole week</span>
+      <p>When something isn't right, don't start over and don't try to fix it by hand. <strong>Tell the agent what you're seeing and ask it to fix it.</strong> You'll hear this on Days 2, 3 and 4 until it's automatic — because it's the actual skill this course is teaching.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= PART 4 ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 4</span></div>
+    <h2 class="block-title">The five words you'll hear all week</h2>
+    <p class="block-lede">For each one: the problem it solves, what it actually looks like on screen, and something familiar to compare it to. You'll create the first three yourself tomorrow.</p>
+
+    <div class="callout">
+      <span class="callout-tag">The mental model</span>
+      <p>An agent is <strong>a loop wrapped around an AI model</strong>. The model in the middle only predicts text. The loop around it is what reads files, writes them, and runs things. Everything in this section is something you hand to that loop to make it work better.</p>
+    </div>
+
+    <!-- AGENTS.MD -->
+    <h3 class="sub-title">1. AGENTS.md — the standing rules for your project</h3>
+    <h4 class="mini-title">The problem it solves</h4>
+    <p>The agent starts fresh with each new instruction. Without help, you end up repeating your project's basics again and again, all day long.</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Every single prompt</span>
+        <p class="mono">"Add a delete button. Remember we're using NestJS, the database is SQLite, there's no login system, plain HTML, no frameworks…"</p>
+        <p>Repeated forty times a day.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Written down once</span>
+        <p class="mono">"Add a delete button."</p>
+        <p>All the background lives in a file the agent reads before every task.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">What it actually looks like</h4>
+    <p>It is a plain text file called <code class="inline">AGENTS.md</code>, saved at the top of your project folder. Here is a real one — very close to what you'll write tomorrow for the project you build on Day 4.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">AGENTS.md</span>
+      </div>
+      <div class="window-body"><span class="k"># Cash-Flow Tracker</span>
+
+<span class="k">## Stack</span>
+<span class="out">- Backend: NestJS</span>
+<span class="out">- Database: SQLite</span>
+<span class="out">- Frontend: plain HTML and CSS, no framework</span>
+
+<span class="k">## Rules</span>
+<span class="out">- No login or user accounts</span>
+<span class="out">- Keep everything in one folder</span>
+<span class="out">- Ask me before adding anything new</span></div>
+    </div>
+
+    <ol class="anno-list">
+      <li><span class="anno-num">1</span><div><strong>It's just text.</strong>You could write this in Notepad. There is no programming involved, and nothing to install.</div></li>
+      <li><span class="anno-num">2</span><div><strong>The Stack section</strong>Tells the agent which technologies to use, so it never guesses and never picks the wrong thing.</div></li>
+      <li><span class="anno-num">3</span><div><strong>The Rules section</strong>Your boundaries. <em>"Ask me before adding anything new"</em> is the single most useful line most people write.</div></li>
+      <li><span class="anno-num">4</span><div><strong>Read automatically.</strong>You never mention the file again. The agent checks it before every single task, for as long as the project exists.</div></li>
+    </ol>
+
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>The note you leave for a substitute teacher. Where things are, what the class is working on, what not to let them get away with — written once, so you don't have to explain it every morning.</p>
+    </div>
+
+    <!-- COMMANDS -->
+    <h3 class="sub-title">2. Commands — a shortcut for an instruction you keep repeating</h3>
+    <h4 class="mini-title">The problem it solves</h4>
+    <p>This one isn't about project background — it's about a whole <em>task</em> you ask for again and again. Think of something you write every term: a course outline, in the same shape, for a different topic each time.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Every term, for every topic</span>
+        <p class="mono">"Write me a course outline on spreadsheets for Grade 10. Include who it's for, the learning outcomes, four to six sessions, and a way to check they learned it. Keep it to one page, plain language…"</p>
+        <p>Retyped, slightly differently, every time.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">Saved once as a command</span>
+        <p class="mono">/course-outline spreadsheets, Grade 10</p>
+        <p>Next week, a different topic — same shape, same quality.</p>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">Easy to mix up</span>
+      <p><strong>AGENTS.md</strong> is background that <em>always</em> applies, automatically. A <strong>command</strong> is an action you deliberately choose to fire when you want it.</p>
+    </div>
+
+    <h4 class="mini-title">What it actually looks like</h4>
+    <p>A command is a text file, saved in a <code class="inline">.opencode/commands</code> folder. <strong>The filename becomes the shortcut</strong> — save <code class="inline">course-outline.md</code> and you can type <code class="inline">/course-outline</code>.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/commands/course-outline.md</span>
+      </div>
+      <div class="window-body"><span class="c">---</span>
+<span class="k">description:</span> <span class="out">Create a short course outline for a topic</span>
+<span class="k">argument-hint:</span> <span class="out">[topic and year group]</span>
+<span class="c">---</span>
+
+<span class="out">Write a one-page course outline for:</span>
+<span class="k">$ARGUMENTS</span>
+
+<span class="out">Include who it is for, 3-5 learning outcomes,
+4-6 sessions, and one way to check they
+learned it. Plain language, no jargon.</span></div>
+    </div>
+
+    <p>Then, in the terminal, you simply type:</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">terminal</span>
+      </div>
+      <div class="window-body"><span class="prompt">&gt; /course-outline spreadsheets, Grade 10</span>
+<span class="out">Writing outline…</span></div>
+    </div>
+
+    <ol class="anno-list">
+      <li><span class="anno-num">1</span><div><strong>The filename is the shortcut.</strong><code class="inline">course-outline.md</code> becomes <code class="inline">/course-outline</code>. Name it whatever makes sense to you.</div></li>
+      <li><span class="anno-num">2</span><div><strong>The top part is just a label.</strong>A <code class="inline">description</code> so you remember what it does, and an <code class="inline">argument-hint</code> reminding you what to type after the name. Both optional, both helpful.</div></li>
+      <li><span class="anno-num">3</span><div><strong><code class="inline">$ARGUMENTS</code> is the blank you fill in.</strong>Whatever you type after the command name drops into that spot. That's what makes one file work for every topic.</div></li>
+      <li><span class="anno-num">4</span><div><strong>The rest is plain English.</strong>Exactly what you'd otherwise type by hand — and since it's an ordinary file, you can email it to a colleague.</div></li>
+    </ol>
+
+    <div class="callout">
+      <span class="callout-tag">You'll build this one tomorrow</span>
+      <p>A copy of this exact command is in your workshop folder as <code class="inline">course-outline.md</code>. On Day 2 you'll create your own version and run it on a topic you're actually teaching.</p>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>A lesson template you saved last year. You don't rewrite the whole plan each term — you open the saved one and go.</p>
+    </div>
+
+    <!-- SKILLS -->
+    <h3 class="sub-title">3. Skills — borrowing someone else's expertise</h3>
+    <h4 class="mini-title">The problem it solves</h4>
+    <p>A command saves an instruction you already know how to write. But what if you don't know the right way to do something in the first place?</p>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Without a skill</span>
+        <p class="mono">"Help me plan an app."</p>
+        <p>You get something generic, because neither of you has agreed what "planning an app" actually involves.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">With a skill</span>
+        <p>The agent already has an expert's step-by-step method for that job written down, and follows it: ask questions, explore options, narrow down, write a specification.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">What it actually looks like</h4>
+    <p>A skill is a <strong>folder</strong> with a file called <code class="inline">SKILL.md</code> inside it, saved under <code class="inline">.opencode/skills/</code>. Here is a real one — a copy is in your workshop folder, and you'll use it tomorrow and again on Day 4.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/skills/refine-idea/SKILL.md</span>
+      </div>
+      <div class="window-body"><span class="c">---</span>
+<span class="k">name:</span> <span class="out">refine-idea</span>
+<span class="k">description:</span> <span class="out">Turn a rough teaching idea into a
+  clear one-page specification by asking questions first</span>
+<span class="c">---</span>
+
+<span class="k">## What I do</span>
+<span class="out">- Ask you 3 to 5 short questions
+- Offer two or three possible directions
+- Write a one-page specification once you choose</span>
+
+<span class="k">## When to use me</span>
+<span class="out">When you have a rough idea and are not yet sure
+what you actually want.</span>
+
+<span class="k">## Rules</span>
+<span class="out">- Never skip the questions
+- Keep it to one page
+- Always include what we are NOT doing</span></div>
+    </div>
+
+    <ol class="anno-list">
+      <li><span class="anno-num">1</span><div><strong>Only two lines are required.</strong>A <code class="inline">name</code> and a <code class="inline">description</code>. Everything below them is just markdown you write yourself.</div></li>
+      <li><span class="anno-num">2</span><div><strong>The description is the trigger.</strong>The agent reads it and recognises when your request matches this kind of job.</div></li>
+      <li><span class="anno-num">3</span><div><strong>The body is the method.</strong>Plain headings and steps, written down by someone who knows the craft properly.</div></li>
+      <li><span class="anno-num">4</span><div><strong>You don't have to call it by name.</strong>Ask for help with an idea, and the agent reaches for it by itself.</div></li>
+    </ol>
+
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>A marking rubric from an experienced colleague. You don't have to work out how to assess the essay — someone already wrote down a good procedure, and you follow it.</p>
+    </div>
+
+    <!-- SUB-AGENTS -->
+    <h3 class="sub-title">4. Sub-agents — focused helpers your agent can call</h3>
+    <p>One agent doing everything has to hold too much in its head at once, and quality slips. Instead it hands focused pieces to helpers. The good news: <strong>OpenCode already comes with several, so you don't have to build any.</strong></p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Helper</th><th>What it's for</th><th>What it may do</th></tr></thead>
+        <tbody>
+          <tr><td class="term">explore</td><td>Searching through your own files to find something.</td><td>Read only — it cannot change your work.</td></tr>
+          <tr><td class="term">scout</td><td>Looking things up outside your project, such as documentation.</td><td>Read only.</td></tr>
+          <tr><td class="term">general</td><td>Taking on a whole multi-step job on its own.</td><td>Full access.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 class="mini-title">How you call one</h4>
+    <p>Type <code class="inline">@</code> followed by the helper's name — exactly like tagging a colleague in a message.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">terminal</span>
+      </div>
+      <div class="window-body"><span class="prompt">&gt; @explore find every file that mentions the sports day page</span>
+
+<span class="c">  ⤷ explore · read-only</span>
+<span class="out">    searching…  found 3 files</span>
+
+<span class="prompt">&gt; now summarise what it found</span></div>
+    </div>
+
+    <p>The helper does its one job, hands the answer back, and you carry on where you left off. Notice that <code class="inline">explore</code> is deliberately read-only — you can hand out a job with no risk of it changing your work.</p>
+
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>Group work in your classroom. One group researches, one designs the poster, one presents — and you pull it together at the end. This is exactly the split you'll use on Day 3.</p>
+    </div>
+
+    <!-- MCP -->
+    <h3 class="sub-title">5. MCP — one standard way to plug in outside tools</h3>
+    <p>Your agent knows about the files in your project folder. It does <em>not</em> automatically know about your school's database, your calendar, or anything else outside that folder. MCP — Model Context Protocol — is the agreed standard for connecting those things in, so that every tool doesn't need its own special wiring.</p>
+    <div class="analogy">
+      <span class="analogy-tag">Think of it as</span>
+      <p>A universal travel adapter. Rather than a different plug for every country, one agreed shape fits them all. You won't need this during our four days — but you'll hear the word constantly, so now you know what it means.</p>
+    </div>
+
+    <h3 class="sub-title">All five together — the page to keep</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Term</th><th>In one line</th><th>Familiar comparison</th><th>You'll meet it</th></tr></thead>
+        <tbody>
+          <tr><td class="term">AGENTS.md</td><td>Standing background and rules for a project</td><td>Note for a substitute teacher</td><td>Day 2</td></tr>
+          <tr><td class="term">Command</td><td>A saved instruction behind a short name</td><td>A saved lesson template</td><td>Day 2</td></tr>
+          <tr><td class="term">Skill</td><td>An expert's method the agent can follow</td><td>A marking rubric</td><td>Day 2 &amp; 4</td></tr>
+          <tr><td class="term">Sub-agent</td><td>A helper given one focused piece of the job</td><td>Group work</td><td>Day 3</td></tr>
+          <tr><td class="term">MCP</td><td>Standard way to connect outside tools</td><td>A universal adapter</td><td>Later, in your reading</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= PART 5: COMMAND REFERENCE ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 5</span></div>
+    <h2 class="block-title">Reference — the commands you'll actually use</h2>
+    <p class="block-lede">You don't need these today. Keep this page open tomorrow — these are all we use for the whole week.</p>
+
+    <h3 class="sub-title">Finding your way around, in the terminal</h3>
+    <p>Windows and Mac use slightly different words for a few of these. Both are given.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>What you want</th><th>Windows</th><th>Mac</th></tr></thead>
+        <tbody>
+          <tr><td>See which folder you're in</td><td class="mono">cd</td><td class="mono">pwd</td></tr>
+          <tr><td>List what's in this folder</td><td class="mono">dir</td><td class="mono">ls</td></tr>
+          <tr><td>Go into a folder</td><td class="mono">cd foldername</td><td class="mono">cd foldername</td></tr>
+          <tr><td>Go back up one level</td><td class="mono">cd ..</td><td class="mono">cd ..</td></tr>
+          <tr><td>Make a new folder</td><td class="mono">mkdir myproject</td><td class="mono">mkdir myproject</td></tr>
+          <tr><td>Clear the screen</td><td class="mono">cls</td><td class="mono">clear</td></tr>
+          <tr><td>Stop whatever is running</td><td class="mono">Ctrl + C</td><td class="mono">Ctrl + C</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">The one to remember</span>
+      <p><code class="inline">Ctrl + C</code> stops anything that's running and gives you back your prompt. If you ever feel stuck or something is scrolling forever, that's your escape hatch. It cannot break anything.</p>
+    </div>
+
+    <h3 class="sub-title">Checking your setup is working</h3>
+    <p>These are the same on Windows and Mac. Each one should print a version number back at you.</p>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Type this</th><th>What it checks</th><th>A good answer looks like</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">node -v</td><td>Node.js is installed</td><td class="mono">v20.11.0</td></tr>
+          <tr><td class="mono">npm -v</td><td>The installer is working</td><td class="mono">10.2.4</td></tr>
+          <tr><td class="mono">opencode --version</td><td>The agent is installed</td><td>a version number</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The exact numbers don't matter. Seeing <em>a number instead of an error</em> is the whole point of these checks.</p>
+
+    <h3 class="sub-title">Inside the agent</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Type this</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">opencode</td><td>Starts the agent, in whichever folder you're currently in.</td></tr>
+          <tr><td class="mono">/connect</td><td>Connects your Gemini key. You'll do this once, tomorrow.</td></tr>
+          <tr><td class="mono">/help</td><td>Lists everything available. Safe to explore.</td></tr>
+          <tr><td class="mono">/undo</td><td>Reverses the last change the agent made.</td></tr>
+          <tr><td class="mono">/init</td><td>Looks at your project and offers to write a first AGENTS.md for you.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= PART 6: HOW TO CHECK ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 6</span></div>
+    <h2 class="block-title">How to tell whether it actually worked</h2>
+    <p class="block-lede">The agent will tell you it's finished. Your job is to confirm that independently — this is the "you check" step of the loop, and it's the part that stays human.</p>
+
+    <h3 class="sub-title">Four checks, in order</h3>
+    <ul class="checklist">
+      <li><strong>Did it say it finished?</strong> Look for a clear success line — a tick, the word "Done", or an address to open. If it just stopped mid-sentence, something went wrong.</li>
+      <li><strong>Do the files exist?</strong> Type <code class="inline">dir</code> on Windows or <code class="inline">ls</code> on Mac and look for the filenames it claimed to create. If they aren't there, they weren't created.</li>
+      <li><strong>Does it run?</strong> If it started a web page, open the address it gave you — usually <code class="inline">http://localhost:3000</code> — in your browser. Seeing the actual page is the real proof.</li>
+      <li><strong>Is it what you asked for?</strong> Not just "does it work" but "does it do what I described". Check your own prompt against what's on screen.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="callout-tag">A note on localhost</span>
+      <p><code class="inline">localhost</code> means "this computer". A page at <code class="inline">http://localhost:3000</code> is running on <em>your own machine</em>, not on the internet — nobody else can see it, and it disappears when you stop the program. That's exactly what we want all week.</p>
+    </div>
+
+    <h3 class="sub-title">If you're not sure, just ask</h3>
+    <p>You are allowed to ask the agent to check its own work, and it's often the fastest route:</p>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">terminal</span>
+      </div>
+      <div class="window-body"><span class="prompt">&gt; did that work? show me the files you created
+  and confirm the page is running</span></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= PART 7: COMMON ERRORS ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 7</span></div>
+    <h2 class="block-title">Common errors and what they actually mean</h2>
+    <p class="block-lede">Every one of these is normal and fixable. None of them mean you've broken your computer, and none of them are your fault. Find the message, read the plain-English meaning, do the fix.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>What you see</th><th>What it means</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">'opencode' is not recognized</td>
+            <td>The computer can't find the agent program.</td>
+            <td>It either isn't installed yet, or the terminal was open before you installed it. Close the terminal, open a new one, try again.</td>
+          </tr>
+          <tr>
+            <td class="mono">'node' is not recognized</td>
+            <td>Node.js isn't installed, or the terminal hasn't noticed it yet.</td>
+            <td>Same fix: close the terminal and open a fresh one. If it still fails, Node needs installing — we do this together tomorrow.</td>
+          </tr>
+          <tr>
+            <td class="mono">command not found: npm</td>
+            <td>The Mac version of the message above.</td>
+            <td>Close Terminal, reopen, try again.</td>
+          </tr>
+          <tr>
+            <td class="mono">429 / rate limit / quota exceeded</td>
+            <td>You've asked the free AI service for too much too quickly.</td>
+            <td>Nothing is broken. Wait a minute and continue. This is expected on a free key and will happen to somebody in the room.</td>
+          </tr>
+          <tr>
+            <td class="mono">401 / invalid API key</td>
+            <td>The Gemini key wasn't accepted.</td>
+            <td>Usually a copy-paste problem — a missing character or a stray space. Run <code class="inline">/connect</code> and paste it again carefully.</td>
+          </tr>
+          <tr>
+            <td class="mono">EADDRINUSE / port already in use</td>
+            <td>Something is already running on that address — often an earlier attempt you didn't stop.</td>
+            <td>Press <code class="inline">Ctrl + C</code> in the window that's still running it, or ask the agent to use a different port.</td>
+          </tr>
+          <tr>
+            <td class="mono">Cannot find module …</td>
+            <td>A piece the project depends on hasn't been downloaded.</td>
+            <td>Tell the agent exactly that: <em>"I'm getting 'cannot find module X' — please fix it."</em> It knows what to do.</td>
+          </tr>
+          <tr>
+            <td class="mono">Permission denied</td>
+            <td>The folder you're in doesn't allow changes.</td>
+            <td>You're probably in a protected system folder. Make a new folder in your Documents and start the agent from there instead.</td>
+          </tr>
+          <tr>
+            <td>The page won't open in the browser</td>
+            <td>The program has stopped, or you have the wrong address.</td>
+            <td>Check the terminal is still running — if it returned to a plain prompt, the program stopped. Restart it and re-read the address.</td>
+          </tr>
+          <tr>
+            <td>It stopped halfway through</td>
+            <td>Usually a rate limit or a brief network drop.</td>
+            <td>Say <em>"please continue"</em>. It picks up where it left off — you don't lose the earlier work.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">The universal fix</span>
+      <p>If you see a message you don't understand, <strong>copy the whole thing and paste it to the agent</strong>, with a sentence saying what you were trying to do. Reading and fixing error messages is exactly what it's good at. You never have to decode one alone.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================= LIMITATIONS + RECAP ================= -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 8</span></div>
+    <h2 class="block-title">Where it will let you down</h2>
+    <p class="block-lede">You'll meet all three of these this week. None are your fault, and none mean you did something wrong.</p>
+    <ul class="plain">
+      <li><strong>Confident mistakes.</strong> Remember it predicts likely-sounding text. Sometimes the likely-sounding thing is simply wrong — stated with total confidence. This is why you check the result yourself.</li>
+      <li><strong>It pauses.</strong> Free accounts have limits. Occasionally it stops for a minute in the middle of a task. That's normal, not broken — wait, then carry on.</li>
+      <li><strong>Different every time.</strong> Ask the same thing twice and you'll get two slightly different answers. Neither is a bug. It's why clear instructions matter more than luck.</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><span class="section-index">Recap</span></div>
+    <h2 class="block-title">If you remember three things</h2>
+    <div class="recap-list">
+      <div class="recap-item"><span class="num">01</span><p>A coding agent doesn't just answer — it reads, writes, runs and checks its own work on your computer.</p></div>
+      <div class="recap-item"><span class="num">02</span><p>Task, specifics, behaviour, boundary. A clear instruction beats a clever one every single time.</p></div>
+      <div class="recap-item"><span class="num">03</span><p>The first answer is a first draft. Don't start over — say what's wrong and go round the loop again.</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><span class="section-index">Next</span></div>
+    <h2 class="block-title">Before Day 2</h2>
+    <p class="block-lede">Everything tomorrow is guided, step by step, together — Windows and Mac both covered, and nobody moves on until the room is ready. Two small things help.</p>
+    <ul class="checklist">
+      <li><strong>Bring your laptop and charger.</strong> Any laptop is fine — Windows or Mac, old or new.</li>
+      <li><strong>Have a Google account you can sign into.</strong> That's what you'll use to create your free Gemini key.</li>
+    </ul>
+    <p>That's genuinely all. If you'd like a head start, re-read Section 5 — but everything there will be shown on screen tomorrow anyway.</p>
+
+    <div class="callout">
+      <span class="callout-tag">Why you're really here</span>
+      <p>Every one of you will teach this to someone — a class, a colleague, your own children. What you understood today becomes theirs the moment you pass it on. That's the actual point of this week.</p>
+    </div>
+  </section>
+
+  <footer class="page-footer">Day 1 Student Guide — Building with AI Coding Assistants · Last updated 8 August 2026</footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2 Student Guide — Building with AI Coding Assistants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F1E6;
+    --paper-alt: #FBF7EF;
+    --white: #FFFDF8;
+    --ink: #2A2521;
+    --ink-soft: #6B6156;
+    --ink-faint: #9A8F7F;
+    --line: #E4D9C7;
+    --terracotta: #C1592A;
+    --terracotta-deep: #9E4620;
+    --terracotta-soft: #F0D3C2;
+    --teal: #35706A;
+    --teal-deep: #244E4A;
+    --teal-soft: #D6E6E2;
+    --gold: #C9932F;
+    --gold-soft: #F5E4C3;
+    --gold-ink: #4A3D22;
+    --radius: 14px;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Karla", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--font-body); line-height: 1.62; font-size: 16px;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 26px 120px; }
+
+  /* ===== MASTHEAD ===== */
+  .masthead {
+    background: var(--teal-deep); color: var(--paper-alt);
+    padding: 58px 26px 68px;
+    background-image: radial-gradient(circle at 85% 10%, rgba(193,89,42,0.25), transparent 45%);
+  }
+  .masthead-inner { max-width: 820px; margin: 0 auto; }
+  .masthead .eyebrow {
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--terracotta-soft);
+    background: rgba(193,89,42,0.18); display: inline-block;
+    padding: 0.4em 0.9em; border-radius: 999px; margin-bottom: 1.1em;
+  }
+  .masthead h1 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(30px, 5vw, 46px); line-height: 1.08;
+    margin: 0 0 0.32em 0; letter-spacing: -0.01em;
+  }
+  .masthead .sub { font-size: 17px; color: var(--teal-soft); max-width: 36em; margin: 0; }
+  .fields-row {
+    display: flex; gap: 2.4em; margin-top: 2em;
+    font-family: var(--font-mono); font-size: 12.5px; color: rgba(251,247,239,0.65);
+  }
+  .fields-row .field-line {
+    border-bottom: 1px dashed rgba(251,247,239,0.4);
+    padding-bottom: 3px; min-width: 170px; display: inline-block;
+  }
+
+  /* ===== HOW TO USE ===== */
+  .howto {
+    margin-top: -36px; background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px 26px;
+    box-shadow: 0 14px 34px rgba(42,37,33,0.1);
+  }
+  .howto h2 {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--terracotta-deep); margin: 0 0 0.8em 0;
+  }
+  .howto p { margin: 0 0 0.7em 0; font-size: 15px; }
+  .howto p:last-child { margin-bottom: 0; }
+
+  /* ===== AGENDA ===== */
+  .agenda {
+    margin-top: 26px; background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px 24px;
+  }
+  .agenda h2 {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--terracotta-deep); margin: 0 0 0.9em 0;
+  }
+  .agenda-row {
+    display: flex; gap: 14px; padding: 7px 0;
+    border-bottom: 1px solid var(--line); font-size: 14.5px;
+  }
+  .agenda-row:last-child { border-bottom: none; }
+  .agenda-time { font-family: var(--font-mono); color: var(--ink-faint); min-width: 52px; flex-shrink: 0; }
+  .part-tag {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--teal-deep);
+    background: var(--teal-soft); padding: 1px 7px; border-radius: 999px; margin-right: 8px;
+  }
+
+  /* ===== SECTIONS ===== */
+  section.block { margin-top: 60px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .section-index { font-family: var(--font-display); font-size: 15px; color: var(--terracotta); font-weight: 600; }
+  h2.block-title {
+    font-family: var(--font-display); font-size: clamp(25px, 3.6vw, 34px);
+    font-weight: 600; margin: 0; letter-spacing: -0.01em; line-height: 1.15;
+  }
+  .block-lede { color: var(--ink-soft); font-size: 16px; margin: 8px 0 24px 0; max-width: 46em; }
+  h3.sub-title {
+    font-family: var(--font-display); font-size: 20.5px; font-weight: 600;
+    margin: 34px 0 10px 0; line-height: 1.25;
+  }
+  h4.mini-title {
+    font-family: var(--font-body); font-size: 16px; font-weight: 700;
+    margin: 22px 0 8px 0; color: var(--ink);
+  }
+  p { font-size: 16px; margin: 0 0 15px 0; }
+  strong { color: var(--ink); font-weight: 700; }
+  ul.plain, ol.plain { padding-left: 1.35em; margin: 0 0 16px 0; }
+  ul.plain li, ol.plain li { margin-bottom: 9px; }
+
+  code.inline {
+    font-family: var(--font-mono); font-size: 0.88em;
+    background: #EFE7D8; border: 1px solid var(--line);
+    padding: 0.1em 0.42em; border-radius: 5px; color: var(--terracotta-deep);
+    overflow-wrap: anywhere;
+  }
+
+  /* ===== STEP BLOCK ===== */
+  .step {
+    background: var(--white); border: 1px solid var(--line);
+    border-left: 4px solid var(--terracotta);
+    border-radius: 11px; padding: 18px 22px; margin: 20px 0;
+  }
+  .step-head { display: flex; align-items: center; gap: 11px; margin-bottom: 11px; }
+  .step-num {
+    font-family: var(--font-mono); font-size: 11.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--terracotta); color: #fff;
+    padding: 0.3em 0.75em; border-radius: 999px; flex-shrink: 0;
+  }
+  .step-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+  .step p { font-size: 15.5px; }
+  .step p:last-child { margin-bottom: 0; }
+
+  /* ===== OS SPLIT ===== */
+  .os-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .os-col { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .os-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 12px; background: #EFE7D8; color: var(--ink-soft);
+  }
+  .os-col .cmd { margin: 0; border-radius: 0; }
+
+  .cmd {
+    font-family: var(--font-mono); background: #211C17; color: #FBF7EF;
+    padding: 13px 16px; border-radius: 9px; font-size: 13.5px;
+    line-height: 1.6; white-space: pre-wrap; margin: 12px 0; overflow-x: auto;
+  }
+  .cmd .prompt-sym { color: #8FC49A; }
+  .cmd .c { color: #9A8F7F; }
+  .cmd .k { color: #E8B79A; }
+
+  .expect {
+    display: flex; gap: 11px; align-items: flex-start;
+    margin: 12px 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft);
+  }
+  .expect-tag {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-deep); background: var(--teal-soft);
+    padding: 4px 9px; border-radius: 999px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  .checkpoint {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: 10px; padding: 13px 17px; margin: 16px 0;
+  }
+  .checkpoint .cp-tag {
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.09em; text-transform: uppercase; color: #8A6516;
+    flex-shrink: 0; padding-top: 2px;
+  }
+  .checkpoint p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--gold-ink); }
+
+  /* ===== FILE WINDOW ===== */
+  .device-window {
+    background: #211C17; border-radius: 11px; overflow: hidden;
+    box-shadow: 0 10px 24px rgba(42,37,33,0.22); margin: 16px 0;
+  }
+  .window-header {
+    display: flex; align-items: center; gap: 8px; padding: 0.55em 0.9em;
+    background: #16130F; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .window-dots { display: flex; gap: 5px; }
+  .window-dots span { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .window-dots span:nth-child(1) { background: #E0796B; }
+  .window-dots span:nth-child(2) { background: #E8C15E; }
+  .window-dots span:nth-child(3) { background: #7FB88F; }
+  .window-filename { font-family: var(--font-mono); font-size: 12px; color: var(--paper-alt); opacity: 0.8; }
+  .window-body {
+    padding: 14px 18px; font-family: var(--font-mono); font-size: 13.5px;
+    line-height: 1.65; color: var(--paper-alt); white-space: pre-wrap; overflow-x: auto;
+  }
+  .window-body .k { color: #E8B79A; }
+  .window-body .c { color: #9A8F7F; }
+  .window-body .prompt { color: #8FC49A; }
+  .window-body .out { color: var(--paper-alt); opacity: 0.84; }
+
+  /* ===== ANNOTATIONS ===== */
+  ol.anno-list { list-style: none; margin: 0 0 18px 0; padding: 0; }
+  ol.anno-list li { display: flex; gap: 12px; margin-bottom: 11px; font-size: 15px; line-height: 1.5; }
+  .anno-num {
+    flex-shrink: 0; background: var(--terracotta); color: #fff;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    width: 24px; height: 24px; line-height: 24px;
+    border-radius: 50%; text-align: center; margin-top: 2px;
+  }
+  ol.anno-list strong { display: block; }
+
+  /* ===== COMPARE ===== */
+  .compare-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 22px 0; }
+  .compare-box { border-radius: 11px; padding: 15px 17px; }
+  .compare-box.weak { background: #FBEDE6; border: 1px solid var(--terracotta-soft); }
+  .compare-box.strong { background: #EBF3F1; border: 1px solid var(--teal-soft); }
+  .compare-box .tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700; display: block; margin-bottom: 8px;
+  }
+  .compare-box.weak .tag { color: var(--terracotta-deep); }
+  .compare-box.strong .tag { color: var(--teal-deep); }
+  .compare-box p { font-size: 14.5px; margin: 0 0 8px 0; line-height: 1.5; }
+  .compare-box p:last-child { margin-bottom: 0; }
+  .compare-box p.mono { font-family: var(--font-mono); font-size: 13.5px; }
+
+  /* ===== ANALOGY / CALLOUT / WARN ===== */
+  .analogy {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--gold-soft); border: 1px solid #E6CE9E;
+    border-radius: var(--radius); padding: 15px 18px; margin: 18px 0;
+  }
+  .analogy .analogy-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; font-weight: 700; color: #8A6516;
+    flex-shrink: 0; padding-top: 3px;
+  }
+  .analogy p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--gold-ink); }
+
+  .callout {
+    background: var(--teal-deep); color: var(--paper-alt);
+    border-radius: var(--radius); padding: 18px 22px; margin: 22px 0;
+  }
+  .callout .callout-tag {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--terracotta-soft); margin-bottom: 7px; display: block;
+  }
+  .callout p { margin: 0 0 10px 0; color: var(--paper-alt); font-size: 15.5px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .warn-box {
+    background: #FBEDE6; border: 1px solid var(--terracotta-soft);
+    border-left: 4px solid var(--terracotta); border-radius: 10px;
+    padding: 15px 18px; margin: 20px 0;
+  }
+  .warn-box .warn-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; font-weight: 700; color: var(--terracotta-deep);
+    display: block; margin-bottom: 6px;
+  }
+  .warn-box p { margin: 0; font-size: 15px; }
+
+  /* ===== TABLES ===== */
+  .table-scroll { overflow-x: auto; margin: 18px 0 22px 0; }
+  table.guide-table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 480px; }
+  table.guide-table th {
+    font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 10.5px; color: var(--ink-faint); text-align: left;
+    padding: 9px 12px; border-bottom: 2px solid var(--line); white-space: nowrap;
+  }
+  table.guide-table td {
+    padding: 11px 12px; border-bottom: 1px solid var(--line);
+    vertical-align: top; line-height: 1.48;
+  }
+  table.guide-table tr:last-child td { border-bottom: none; }
+  table.guide-table td.term { font-weight: 700; white-space: nowrap; }
+  table.guide-table td.mono, table.guide-table td .mono {
+    font-family: var(--font-mono); font-size: 13px; color: var(--terracotta-deep);
+  }
+  table.guide-table tbody tr:nth-child(even) { background: rgba(255,253,248,0.6); }
+
+  /* ===== CHECKLIST ===== */
+  ul.checklist { list-style: none; padding: 0; margin: 16px 0 20px 0; }
+  ul.checklist li {
+    position: relative; padding-left: 34px; margin-bottom: 11px;
+    font-size: 15.5px; line-height: 1.5;
+  }
+  ul.checklist li::before {
+    content: ""; position: absolute; left: 0; top: 2px;
+    width: 19px; height: 19px; border: 2px solid var(--teal);
+    border-radius: 5px; background: var(--white);
+  }
+
+  hr.divider { border: none; border-top: 1px solid var(--line); margin: 52px 0; }
+  footer.page-footer {
+    text-align: center; font-family: var(--font-mono); font-size: 11.5px;
+    color: var(--ink-faint); margin-top: 64px;
+  }
+
+  @media (max-width: 700px) {
+    .compare-pair, .os-split { grid-template-columns: 1fr; }
+    .fields-row { flex-direction: column; gap: 10px; }
+    .masthead { padding: 42px 18px 54px; }
+    .wrap { padding: 0 17px 90px; }
+    .howto { margin-top: -26px; padding: 18px; }
+  }
+
+  @media print {
+    body { background: white; font-size: 11.5pt; }
+    .masthead, .callout, .analogy, .warn-box, .compare-box, .device-window, .cmd, .step, .checkpoint {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    section.block, .step, .device-window { page-break-inside: avoid; }
+    hr.divider { margin: 30px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <span class="eyebrow">Day 2 of 4 · Student Guide</span>
+    <h1>Your Turn at the Keyboard</h1>
+    <p class="sub">Set up your own machine, then teach your agent how your projects work. Every command you need is written out here — nothing is assumed.</p>
+    <div class="fields-row">
+      <span>Name: <span class="field-line">&nbsp;</span></span>
+      <span>Date: <span class="field-line">&nbsp;</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="howto">
+    <h2>How to use this guide</h2>
+    <p><strong>This is your safety net.</strong> Everything shown on screen today is written out here in full. If you fall behind, don't panic — find your place in this guide and carry on. If you get badly stuck, raise your hand; the room will wait for you.</p>
+    <p><strong>Every command appears twice</strong> where Windows and Mac differ. Find your side, ignore the other.</p>
+    <p><strong>Keep this after today.</strong> Section 7 lets you repeat the entire setup at home or on a school computer, and Section 8 covers what to do when something goes wrong.</p>
+  </div>
+
+  <div class="agenda">
+    <h2>Today's flow — 2 hours</h2>
+    <div class="agenda-row"><span class="agenda-time">0:00</span><span>Welcome, recap, and how today works</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:08</span><span><span class="part-tag">Part 1</span>The terminal — opening it, reading it, four commands</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:23</span><span><span class="part-tag">Part 2</span>Setting up — Node, OpenCode, your free Gemini key</span></div>
+    <div class="agenda-row"><span class="agenda-time">0:58</span><span><span class="part-tag">Part 3</span>Teaching your agent — AGENTS.md, a command, a skill</span></div>
+    <div class="agenda-row"><span class="agenda-time">1:20</span><span><span class="part-tag">Part 4</span>The workflow — three skills, chained end to end</span></div>
+    <div class="agenda-row"><span class="agenda-time">1:41</span><span>What you have, and a look at Day 3</span></div>
+  </div>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 1</span></div>
+    <h2 class="block-title">The Terminal</h2>
+    <p class="block-lede">Twenty minutes to make the black window feel ordinary. If you have never opened one before, this part is written especially for you.</p>
+
+    <h3 class="sub-title">What it is, one more time</h3>
+    <p>The terminal is the same computer and the same files you already know — just a different way of asking for things. Instead of pointing at an icon with your mouse, you type a line describing what you want and press Enter.</p>
+
+    <div class="analogy">
+      <span class="analogy-tag">Reassurance</span>
+      <p>The terminal is not a special "programmer mode" where you can damage your computer. It's a different door into the same house. Everything we type today is safe, and you can close the window whenever you like.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 1</span><span class="step-title">Open your terminal</span></div>
+      <div class="os-split">
+        <div class="os-col">
+          <div class="os-label">Windows</div>
+          <div class="cmd">Press the <span class="k">Windows key</span>
+Type: <span class="k">powershell</span>
+Press <span class="k">Enter</span></div>
+        </div>
+        <div class="os-col">
+          <div class="os-label">Mac</div>
+          <div class="cmd">Press <span class="k">Cmd + Space</span>
+Type: <span class="k">terminal</span>
+Press <span class="k">Enter</span></div>
+        </div>
+      </div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A window with some text and a blinking cursor waiting for you to type.</span>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Reading that first line</h3>
+    <p>Before typing anything, it helps to know what the text already on screen means.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">terminal</span>
+      </div>
+      <div class="window-body"><span class="c">On Windows</span>
+<span class="k">C:\Users\Nimal</span><span class="prompt">&gt;</span>
+
+<span class="c">On Mac</span>
+<span class="k">nimal@MacBook ~</span> <span class="prompt">%</span></div>
+    </div>
+
+    <ol class="anno-list">
+      <li><span class="anno-num">1</span><div><strong>Your name and machine</strong>Just a label. Nothing to do with what you type.</div></li>
+      <li><span class="anno-num">2</span><div><strong>Which folder you are in</strong>This is the useful part — the terminal is always "standing" inside one folder, and this tells you which.</div></li>
+      <li><span class="anno-num">3</span><div><strong>The <code class="inline">&gt;</code> or <code class="inline">%</code> symbol</strong>Means "ready, type here". <strong>You never type this symbol yourself</strong> — in this guide it only shows where a command begins.</div></li>
+    </ol>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 2</span><span class="step-title">Where am I, and what's here?</span></div>
+      <div class="os-split">
+        <div class="os-col">
+          <div class="os-label">Windows</div>
+          <div class="cmd"><span class="prompt-sym">&gt;</span> cd
+<span class="c">shows your current folder</span>
+
+<span class="prompt-sym">&gt;</span> dir
+<span class="c">lists what's inside</span></div>
+        </div>
+        <div class="os-col">
+          <div class="os-label">Mac</div>
+          <div class="cmd"><span class="prompt-sym">%</span> pwd
+<span class="c">shows your current folder</span>
+
+<span class="prompt-sym">%</span> ls
+<span class="c">lists what's inside</span></div>
+        </div>
+      </div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A folder path, then a list of names — Documents, Downloads, Desktop and so on. These are exactly the folders you'd see in a normal file window.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 3</span><span class="step-title">Make a folder and step into it</span></div>
+      <p>These four are identical on Windows and Mac.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> mkdir my-agent      <span class="c">← make a new folder</span>
+<span class="prompt-sym">&gt;</span> cd my-agent        <span class="c">← step inside it</span>
+<span class="prompt-sym">&gt;</span> cd ..              <span class="c">← step back out</span>
+<span class="prompt-sym">&gt;</span> cd my-agent        <span class="c">← and back in</span></div>
+      <div class="expect">
+        <span class="expect-tag">Watch</span>
+        <span>The folder name at the start of your line changes as you move in and out. That text always tells you where you are.</span>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <span class="cp-tag">✋ Checkpoint</span>
+      <p>You should now be <strong>inside</strong> a folder called <code class="inline">my-agent</code>. Everything for the rest of today happens in here — if you're somewhere else, later steps will give confusing errors.</p>
+    </div>
+
+    <h3 class="sub-title">Your escape hatch: Ctrl + C</h3>
+    <p>If text scrolls forever, if something seems stuck, or if you just want out — hold <strong>Ctrl</strong> and press <strong>C</strong>. It stops whatever is running and gives you back your prompt.</p>
+    <ul class="plain">
+      <li><strong>It's safe.</strong> Ctrl + C is a stop button, not a delete button. It cannot damage anything.</li>
+      <li><strong>It's the same on both systems</strong> — and on a Mac it really is Ctrl, not Cmd.</li>
+      <li><strong>Use it freely.</strong> Any time you feel stuck today, press it and put your hand up.</li>
+    </ul>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 2 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 2</span></div>
+    <h2 class="block-title">Setting Up</h2>
+    <p class="block-lede">Six steps to a working coding agent on your own laptop. Take them one at a time and check each one before moving on.</p>
+
+    <h3 class="sub-title">What we're installing, and why it's two pieces</h3>
+    <ul class="plain">
+      <li><strong>OpenCode</strong> — the agent itself, running on your laptop. This is the part that reads, writes and runs your files.</li>
+      <li><strong>A Gemini API key</strong> — your personal pass to Google's AI model, which does the thinking. Free, and no credit card is requested.</li>
+    </ul>
+    <p>Your files stay on your own machine. Only the relevant piece of context travels to the model as part of a question — and because the two are separate, switching to a better model later means changing one setting, not relearning everything.</p>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 1</span><span class="step-title">Install Node.js</span></div>
+      <p>Node is the engine OpenCode runs on. Install it once and forget about it. Go to <strong>nodejs.org</strong> and download the version marked <strong>LTS</strong> — that stands for Long Term Support and it's the stable one.</p>
+      <div class="os-split">
+        <div class="os-col">
+          <div class="os-label">Windows</div>
+          <div class="cmd">Download the <span class="k">.msi</span> file
+Double-click it
+Click Next through the installer</div>
+        </div>
+        <div class="os-col">
+          <div class="os-label">Mac</div>
+          <div class="cmd">Download the <span class="k">.pkg</span> file
+Double-click it
+Click Continue through the installer</div>
+        </div>
+      </div>
+      <div class="expect">
+        <span class="expect-tag">Tip</span>
+        <span>Accept every default option. There is nothing to choose or configure.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 2</span><span class="step-title">Check Node installed properly</span></div>
+      <p><strong>Close your terminal completely and open a new one first.</strong> A terminal that was open before the install won't know Node exists yet — this catches almost everybody.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> node -v
+<span class="c">v20.11.0        ← a version number; yours may differ</span>
+
+<span class="prompt-sym">&gt;</span> npm -v
+<span class="c">10.2.4          ← another version number</span></div>
+      <div class="expect">
+        <span class="expect-tag">The point</span>
+        <span>The exact numbers do not matter. Seeing <strong>a number instead of an error</strong> is the whole test.</span>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">If you see "not recognized" or "command not found"</span>
+      <p>Nine times out of ten the terminal was open before you installed Node. Close it, open a brand new one, and try again. If it still fails, put your hand up — don't fight it alone.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 3</span><span class="step-title">Install OpenCode</span></div>
+      <p>One command, identical on both Windows and Mac.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> npm install -g opencode-ai</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>Text scrolling for up to a minute, ending with a summary. <strong>Yellow warnings are normal</strong> and can be ignored — only red errors matter.</span>
+      </div>
+      <p style="margin-top:12px;">The <code class="inline">-g</code> means "global" — install it for the whole computer rather than one folder. That's what lets you run it from anywhere.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 4</span><span class="step-title">Get your own free Gemini key</span></div>
+      <p>This part happens in your web browser, not the terminal.</p>
+      <div class="cmd">1. Go to  <span class="k">aistudio.google.com/apikey</span>
+2. Sign in with your Google account
+3. Click  <span class="k">Create API key</span>
+4. Copy the whole key</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A long string of letters and numbers. Copy every character — a missing one is the most common cause of the next step failing.</span>
+      </div>
+      <div class="analogy">
+        <span class="analogy-tag">Treat it like a password</span>
+        <p>This key is yours alone. Don't post it anywhere or share it with anyone. It costs nothing, and if you ever lose it you simply create another.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 5</span><span class="step-title">Start the agent and connect your key</span></div>
+      <p>Back in the terminal, and make sure you're inside your <code class="inline">my-agent</code> folder.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> opencode
+<span class="c">the agent starts up</span>
+
+<span class="prompt-sym">&gt;</span> /connect
+<span class="c">use the arrow keys to choose Google, press Enter,
+   then paste your key and press Enter again</span></div>
+      <div class="expect">
+        <span class="expect-tag">Paste tip</span>
+        <span>Use <strong>Ctrl + V</strong> on Windows or <strong>Cmd + V</strong> on Mac. Some terminals show <em>nothing at all</em> while you paste a key — that's normal and doesn't mean it failed. Just press Enter.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Step 6</span><span class="step-title">Your first instruction</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> create a file called hello.txt containing a
+  friendly greeting for a teacher, then show me
+  what you wrote</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>The agent thinking, creating the file, then showing you what it wrote. Type <code class="inline">dir</code> or <code class="inline">ls</code> afterwards and hello.txt will be there.</span>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <span class="cp-tag">✋ Checkpoint</span>
+      <p>You now have a real file, created by an AI agent, on your own laptop. If you got here — everything else today is easier than what you just did.</p>
+    </div>
+
+    <h3 class="sub-title">Make a spare key before you forget</h3>
+    <p>Free keys have daily limits. On Day 4 everyone will be working hard at the same time and somebody will hit theirs. A spare turns a stuck afternoon into a thirty-second fix.</p>
+    <div class="cmd">1. Back to  <span class="k">aistudio.google.com/apikey</span>
+2. Click  <span class="k">Create API key</span>  a second time
+3. Save both somewhere you can find them
+   <span class="c">— a note on your phone is perfectly fine</span></div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 3 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 3</span></div>
+    <h2 class="block-title">Teaching Your Agent</h2>
+    <p class="block-lede">Three things that turn a generic agent into one that understands your work: standing rules, a shortcut, and a method.</p>
+
+    <!-- AGENTS.MD -->
+    <h3 class="sub-title">1. AGENTS.md — your project's standing rules</h3>
+    <p>Your agent starts fresh with every instruction. Without help you end up repeating the same background all day long.</p>
+
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">Without it</span>
+        <p class="mono">"Add a page. Remember, plain HTML, no frameworks, keep files in this folder, ask before installing…"</p>
+        <p>Typed again. And again.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">With it</span>
+        <p class="mono">"Add a page."</p>
+        <p>The background sits in a file the agent reads before every task.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Ask your agent to write it for you</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> create an AGENTS.md file for this project.
+  Stack: plain HTML and CSS, no frameworks.
+  Rules: keep all files in this folder, use simple
+  language in comments, and ask me before adding
+  anything new.</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A new AGENTS.md file with your stack and rules under headings. Ask it to show you the contents if it doesn't do so automatically.</span>
+      </div>
+    </div>
+
+    <p>Here is roughly what it will contain. Notice there is nothing technical about it — it's a plain text file you could have written in Notepad.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">AGENTS.md</span>
+      </div>
+      <div class="window-body"><span class="k"># My Agent Project</span>
+
+<span class="k">## Stack</span>
+<span class="out">- Plain HTML and CSS</span>
+<span class="out">- No frameworks</span>
+
+<span class="k">## Rules</span>
+<span class="out">- Keep all files in this folder</span>
+<span class="out">- Use simple language in comments</span>
+<span class="out">- Ask before adding anything new</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Prove it actually works</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> make a simple welcome page for my class</div>
+      <div class="expect">
+        <span class="expect-tag">Watch for</span>
+        <span>You said nothing about HTML, frameworks or where to save it — but it followed all three rules anyway, because it read your AGENTS.md first.</span>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">Remember it as</span>
+      <p>The note you leave for a substitute teacher. Written once, so you don't have to explain it every morning.</p>
+    </div>
+
+    <!-- COMMANDS -->
+    <h3 class="sub-title">2. Commands — your own shortcuts</h3>
+    <p>AGENTS.md is background that <em>always</em> applies. A command is an action you deliberately fire when you want it. Both are ordinary text files.</p>
+    <p>The clever part: <strong>the filename becomes the shortcut.</strong> A file called <code class="inline">course-outline.md</code> gives you <code class="inline">/course-outline</code>. This is the same command you saw on Day 1.</p>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Create the course-outline command</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> create a command called course-outline. It should
+  write a one-page course outline for whatever topic
+  and year group I give it, with who it is for, 3 to 5
+  learning outcomes, 4 to 6 sessions, and one way to
+  check they learned it. Use $ARGUMENTS for the topic.</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A new file at <code class="inline">.opencode/commands/course-outline.md</code>. The dot at the front simply means the folder is normally hidden — nothing unusual about it.</span>
+      </div>
+    </div>
+
+    <p>Your file should look like this. The complete version is in <strong>Section 9</strong> if you'd rather copy it than have the agent write it.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/commands/course-outline.md</span>
+      </div>
+      <div class="window-body"><span class="c">---</span>
+<span class="k">description:</span> <span class="out">Create a short course outline for a topic</span>
+<span class="k">argument-hint:</span> <span class="out">[topic and year group]</span>
+<span class="c">---</span>
+
+<span class="out">Write a one-page course outline for:</span>
+<span class="k">$ARGUMENTS</span>
+
+<span class="out">Include who it is for, 3-5 learning outcomes,
+4-6 sessions, and one way to check they learned it.</span></div>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">The important bit: $ARGUMENTS</span>
+      <p>That single word is the blank you fill in. Whatever you type after the command name drops into that spot — which is what makes <strong>one file work for every topic you will ever teach</strong>. Without it, you'd have a command that only ever writes about one subject.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Run it twice, with different topics</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> /course-outline spreadsheets, Grade 10
+
+<span class="c">then run it again with something else —</span>
+
+<span class="prompt-sym">&gt;</span> /course-outline internet safety, Grade 7</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>Two completely different outlines, both in the same shape — and you typed the instructions <strong>zero</strong> times.</span>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">Remember it as</span>
+      <p>A lesson template you saved last year. You don't rewrite the plan each term — you open the saved one and go. And because it's a file, you can email it to a colleague.</p>
+    </div>
+
+    <!-- SKILLS -->
+    <h3 class="sub-title">3. Skills — a method, not just an instruction</h3>
+    <p>A command saves an instruction you already know how to write. A <strong>skill</strong> gives your agent a whole <em>method</em> — the steps to follow for a kind of job. We'll build one, then watch it change how your agent behaves.</p>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Build the idea-refine skill</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> create a skill called idea-refine. Its method:
+  ask me 3 to 5 short questions, offer two or three
+  directions, then write a one-page specification.
+  Rule: never skip the questions.</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A new <strong>folder</strong> with a file inside it — <code class="inline">.opencode/skills/idea-refine/SKILL.md</code>. Skills are folders; commands are single files.</span>
+      </div>
+    </div>
+
+    <p>Only two lines are genuinely required — <code class="inline">name</code> and <code class="inline">description</code>. Everything below them is just markdown you wrote. The full file is in <strong>Section 9</strong>.</p>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/skills/idea-refine/SKILL.md</span>
+      </div>
+      <div class="window-body"><span class="c">---</span>
+<span class="k">name:</span> <span class="out">idea-refine</span>
+<span class="k">description:</span> <span class="out">Refines a rough idea into a sharp,
+  actionable concept by asking questions first</span>
+<span class="c">---</span>
+
+<span class="k">## How it works</span>
+<span class="out">1. Ask 3 to 5 sharpening questions, then wait
+2. Offer two or three different directions
+3. Write a one-page summary</span>
+
+<span class="k">## Rules</span>
+<span class="out">- Never skip the questions
+- Always include what we are NOT doing</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Now watch your own file change its behaviour</span></div>
+      <p>You never mention the skill by name. The agent reads the description, recognises the job, and follows your method by itself.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> help me refine an idea for a classroom
+  activity about online safety</div>
+      <div class="expect">
+        <span class="expect-tag">Watch for</span>
+        <span>It should <strong>ask you questions instead of answering</strong> — because your file told it to. If it answers straight away, tell it: <code class="inline">use the idea-refine skill</code>.</span>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">Remember it as</span>
+      <p>A marking rubric from an experienced colleague. You don't work out how to assess the essay — someone already wrote down a good procedure, and you follow it.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 4 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Part 4</span></div>
+    <h2 class="block-title">The Workflow</h2>
+    <p class="block-lede">One method for building anything bigger than a single request — and the exact method you'll use to build a real application on Day 4.</p>
+
+    <h3 class="sub-title">Never ask for something big in one go</h3>
+    <p>Asking for a whole project in one sentence gives you a vague result that's hard to correct. Four smaller steps give you something you actually wanted — because each arrow between them is a chance to catch a misunderstanding while it's still cheap to fix.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Step</th><th>What you get</th><th>Why it helps</th></tr></thead>
+        <tbody>
+          <tr><td class="term">1. Rough idea</td><td>One sentence.</td><td>Where everyone starts. Nothing wrong with it.</td></tr>
+          <tr><td class="term">2. Specification</td><td>What exactly — and what deliberately <em>not</em>.</td><td>Forces the vague parts into the open early.</td></tr>
+          <tr><td class="term">3. Plan</td><td>The approach, in order.</td><td>You can correct a plan in one sentence. Correcting finished work costs the whole build.</td></tr>
+          <tr><td class="term">4. Tasks</td><td>Small, checkable steps.</td><td>Progress becomes visible, and mistakes stay small.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>There is <strong>one skill for each stage</strong>, so you don't have to remember how each one works. You built the first this morning; now let's make the other two.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Stage</th><th>Skill</th><th>What comes out</th></tr></thead>
+        <tbody>
+          <tr><td class="term">1. Sharpen the idea</td><td class="mono">idea-refine</td><td>A clear one-page summary of what you actually want.</td></tr>
+          <tr><td class="term">2. Agree what to build</td><td class="mono">write-prd</td><td>A PRD — six sections, including what you're <em>not</em> doing.</td></tr>
+          <tr><td class="term">3. Break it into steps</td><td class="mono">planning-and-task-breakdown</td><td>4 to 8 tasks, each with a Do and a Done line.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Create the other two skills</span></div>
+      <p>You already know how, so this is quick — one prompt makes both. The complete files are in <strong>Section 9</strong> if you'd rather copy them.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> create two more skills.
+
+  write-prd — takes a refined idea and writes a one-page
+  PRD with six sections: what we are building, who it is
+  for, why, what it must do, what we are NOT doing, and
+  how we know it is done.
+
+  planning-and-task-breakdown — takes a PRD and turns it
+  into 4 to 8 numbered tasks, each with a Do line and a
+  Done line.</div>
+      <div class="expect">
+        <span class="expect-tag">Then check</span>
+        <span>Ask <code class="inline">list my skills</code> — you should have three.</span>
+      </div>
+    </div>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/skills/</span>
+      </div>
+      <div class="window-body"><span class="out">idea-refine/SKILL.md                  </span><span class="c">← step 1</span>
+<span class="out">write-prd/SKILL.md                   </span><span class="c">← step 2</span>
+<span class="out">planning-and-task-breakdown/SKILL.md </span><span class="c">← step 3</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Step 1 — sharpen the idea</span></div>
+      <p>Pick something you'd genuinely like for your own class. Real needs work far better than invented examples.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> use the idea-refine skill on this idea:
+  a set of revision materials for my Grade 10
+  ICT class on spreadsheet formulas</div>
+      <div class="expect">
+        <span class="expect-tag">Watch for</span>
+        <span>It asks 3 to 5 questions, then offers two or three directions and recommends one. Answer honestly and pick a direction — the questions are the valuable part.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Step 2 — turn it into a PRD</span></div>
+      <p>A <strong>PRD</strong> — product requirements document — is just a written agreement about what you're making, before anyone starts making it.</p>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> now use the write-prd skill to turn that into a PRD</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>A one-page document with six sections. <strong>Read section 5 carefully</strong> — "what we are not doing" is the part that stops the work quietly growing until it never finishes.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Do now</span><span class="step-title">Step 3 — break it into tasks</span></div>
+      <div class="cmd"><span class="prompt-sym">&gt;</span> use the planning-and-task-breakdown skill on that PRD</div>
+      <div class="expect">
+        <span class="expect-tag">You should see</span>
+        <span>4 to 8 numbered tasks in order, each with a <strong>Do</strong> line and a <strong>Done</strong> line — so you can always tell what finished looks like.</span>
+      </div>
+    </div>
+
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">what comes back</span>
+      </div>
+      <div class="window-body"><span class="k">Task 1 — Write the practice questions</span>
+<span class="out">  Do:   10 questions on formulas, easy to hard
+  Done: 10 questions exist with an answer key</span>
+
+<span class="k">Task 2 — Add a worked example for each</span>
+<span class="out">  Do:   show the steps, not just the answer
+  Done: every question has a worked example</span></div>
+    </div>
+
+    <p>Read the tasks before accepting them. Correcting a task list takes a sentence; correcting finished work takes the whole build again.</p>
+
+    <h3 class="sub-title">Step 4 — iterate. This is the job, not a failure.</h3>
+    <div class="compare-pair">
+      <div class="compare-box weak">
+        <span class="tag">What beginners do</span>
+        <p>The output isn't right, so they delete everything and start the whole request again.</p>
+        <p>Slow — and it throws away the parts that were fine.</p>
+      </div>
+      <div class="compare-box strong">
+        <span class="tag">What you do now</span>
+        <p class="mono">"Good, but the questions are too easy for Grade 10, and I need a marking scheme at the end."</p>
+        <p>Keeps what worked. Changes only what didn't.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">The rule of the week</span>
+      <p>Don't start over. <strong>Say what's wrong.</strong> You'll rely on this heavily on Day 4 — and it's the habit that most separates people who find these tools useful from people who give up on them.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 5 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 5</span></div>
+    <h2 class="block-title">Command reference</h2>
+    <p class="block-lede">Everything you typed today, in one place. This is the page to keep open on Days 3 and 4.</p>
+
+    <h3 class="sub-title">Finding your way around</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>What you want</th><th>Windows</th><th>Mac</th></tr></thead>
+        <tbody>
+          <tr><td>See which folder you're in</td><td class="mono">cd</td><td class="mono">pwd</td></tr>
+          <tr><td>List what's in this folder</td><td class="mono">dir</td><td class="mono">ls</td></tr>
+          <tr><td>Go into a folder</td><td class="mono">cd foldername</td><td class="mono">cd foldername</td></tr>
+          <tr><td>Go back up one level</td><td class="mono">cd ..</td><td class="mono">cd ..</td></tr>
+          <tr><td>Make a new folder</td><td class="mono">mkdir myproject</td><td class="mono">mkdir myproject</td></tr>
+          <tr><td>Clear the screen</td><td class="mono">cls</td><td class="mono">clear</td></tr>
+          <tr><td>Stop whatever is running</td><td class="mono">Ctrl + C</td><td class="mono">Ctrl + C</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">Checking your setup</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Type this</th><th>What it checks</th><th>A good answer</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">node -v</td><td>Node.js is installed</td><td class="mono">v20.11.0</td></tr>
+          <tr><td class="mono">npm -v</td><td>The installer works</td><td class="mono">10.2.4</td></tr>
+          <tr><td class="mono">opencode --version</td><td>The agent is installed</td><td>a version number</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">Inside the agent</h3>
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Type this</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">opencode</td><td>Starts the agent in whichever folder you're currently in.</td></tr>
+          <tr><td class="mono">/connect</td><td>Connects your Gemini key. Also how you switch to your spare key.</td></tr>
+          <tr><td class="mono">/help</td><td>Lists everything available. Safe to explore.</td></tr>
+          <tr><td class="mono">/undo</td><td>Reverses the last change the agent made.</td></tr>
+          <tr><td class="mono">/init</td><td>Looks at your project and offers to write an AGENTS.md for you.</td></tr>
+          <tr><td class="mono">/course-outline &lt;topic&gt;</td><td>Your own command, from today.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 6 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 6</span></div>
+    <h2 class="block-title">How to tell it actually worked</h2>
+    <p class="block-lede">The agent will tell you it's finished. Confirming that independently is your job — it's the "you check" step of the loop, and it stays human.</p>
+    <ul class="checklist">
+      <li><strong>Did it say it finished?</strong> Look for a clear success line. If it stopped mid-sentence, something went wrong.</li>
+      <li><strong>Do the files exist?</strong> Type <code class="inline">dir</code> or <code class="inline">ls</code> and look for the filenames it claimed to create.</li>
+      <li><strong>Does it run?</strong> If it started a web page, open the address it gave you — usually <code class="inline">http://localhost:3000</code>.</li>
+      <li><strong>Is it what you asked for?</strong> Not just "does it work" but "does it do what I described". Re-read your own prompt.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="callout-tag">A note on localhost</span>
+      <p><code class="inline">localhost</code> means "this computer". A page at <code class="inline">http://localhost:3000</code> runs on <em>your own machine</em> — nobody else can see it, and it disappears when you stop the program. That's exactly what we want all week.</p>
+    </div>
+
+    <p>If you're unsure, you're allowed to just ask:</p>
+    <div class="cmd"><span class="prompt-sym">&gt;</span> did that work? show me the files you created
+  and confirm everything is running</div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 7 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 7</span></div>
+    <h2 class="block-title">Repeating this setup somewhere else</h2>
+    <p class="block-lede">The whole of today's setup, condensed. Use this on a school computer, at home, or when showing a colleague.</p>
+    <ol class="plain">
+      <li>Install <strong>Node.js LTS</strong> from nodejs.org — the .msi on Windows, the .pkg on Mac.</li>
+      <li>Open a <strong>fresh</strong> terminal and check with <code class="inline">node -v</code> and <code class="inline">npm -v</code>.</li>
+      <li>Run <code class="inline">npm install -g opencode-ai</code>.</li>
+      <li>Get a free key at <strong>aistudio.google.com/apikey</strong>.</li>
+      <li>Make a project folder with <code class="inline">mkdir</code>, then <code class="inline">cd</code> into it.</li>
+      <li>Run <code class="inline">opencode</code>, then <code class="inline">/connect</code>, choose Google, paste the key.</li>
+      <li>Test it with a small request, such as creating a text file.</li>
+    </ol>
+
+    <div class="analogy">
+      <span class="analogy-tag">Teaching this to students</span>
+      <p>These seven steps are the same ones your students would follow. The only part needing an adult is the Google account for the key — worth planning before a class, not during one.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 8 ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 8</span></div>
+    <h2 class="block-title">When something goes wrong</h2>
+    <p class="block-lede">Every one of these is normal and fixable. None mean you've broken your computer, and none are your fault.</p>
+
+    <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>What you see</th><th>What it means</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">'opencode' is not recognized</td>
+            <td>The computer can't find the agent.</td>
+            <td>Close the terminal, open a new one, try again. If it persists, run the install command from Step 3 again.</td>
+          </tr>
+          <tr>
+            <td class="mono">'node' is not recognized</td>
+            <td>Node isn't installed, or the terminal hasn't noticed it.</td>
+            <td>Close the terminal and open a fresh one. If it still fails, reinstall Node from nodejs.org.</td>
+          </tr>
+          <tr>
+            <td class="mono">command not found: npm</td>
+            <td>The Mac version of the message above.</td>
+            <td>Close Terminal, reopen, try again.</td>
+          </tr>
+          <tr>
+            <td class="mono">429 / rate limit / quota</td>
+            <td>You've asked the free service for too much too quickly.</td>
+            <td>Nothing is broken. Wait a minute and continue. If it keeps happening, switch to your spare key with <code class="inline">/connect</code>.</td>
+          </tr>
+          <tr>
+            <td class="mono">401 / invalid API key</td>
+            <td>The key wasn't accepted.</td>
+            <td>Almost always a copy-paste problem — a missing character or a stray space. Run <code class="inline">/connect</code> and paste it again carefully.</td>
+          </tr>
+          <tr>
+            <td class="mono">EADDRINUSE / port in use</td>
+            <td>Something is already running at that address, often an earlier attempt.</td>
+            <td>Press <code class="inline">Ctrl + C</code> in the window still running it, or ask the agent to use a different port.</td>
+          </tr>
+          <tr>
+            <td class="mono">Cannot find module …</td>
+            <td>Something the project depends on hasn't been downloaded.</td>
+            <td>Tell the agent exactly that and ask it to fix it. It knows what to do.</td>
+          </tr>
+          <tr>
+            <td class="mono">Permission denied</td>
+            <td>The folder doesn't allow changes.</td>
+            <td>You're probably in a protected system folder. Make a folder in Documents and start again from there.</td>
+          </tr>
+          <tr>
+            <td>Nothing appeared when I pasted my key</td>
+            <td>Many terminals hide pasted keys deliberately.</td>
+            <td>Normal. Press Enter once — don't paste repeatedly.</td>
+          </tr>
+          <tr>
+            <td>It stopped halfway through</td>
+            <td>Usually a rate limit or a brief network drop.</td>
+            <td>Say <em>"please continue"</em>. It picks up where it left off; you don't lose earlier work.</td>
+          </tr>
+          <tr>
+            <td>My command doesn't run</td>
+            <td>The file may be in the wrong folder or named differently.</td>
+            <td>Ask: <em>"list my commands and tell me why /course-outline isn't working"</em>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">The universal fix</span>
+      <p>For anything not on this list — <strong>copy the whole error message and paste it to your agent</strong>, with a sentence saying what you were trying to do. Reading and fixing error messages is exactly what it's best at. You never have to decode one alone.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ CLOSE ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Recap</span></div>
+    <h2 class="block-title">What's on your laptop now</h2>
+    <ul class="checklist">
+      <li>A working coding agent connected to your own free Gemini key — plus a spare key.</li>
+      <li>An <strong>AGENTS.md</strong> with rules your agent follows without being reminded.</li>
+      <li>A <strong>/course-outline</strong> command that writes an outline for any topic you name.</li>
+      <li>Three <strong>skills</strong> — <code class="inline">idea-refine</code>, <code class="inline">write-prd</code> and <code class="inline">planning-and-task-breakdown</code> — chained into one workflow.</li>
+      <li>A specification, plan and task list for something you can genuinely use with a class.</li>
+    </ul>
+    <p>All of it created by describing what you wanted in your own words. That's the entire skill — everything else is practice.</p>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><span class="section-index">Next</span></div>
+    <h2 class="block-title">Before Day 3</h2>
+    <ul class="checklist">
+      <li><strong>Leave everything installed exactly as it is.</strong> We start tomorrow in the same <code class="inline">my-agent</code> folder, with the same setup. Nothing to redo.</li>
+      <li><strong>Bring your laptop and charger again.</strong></li>
+      <li><strong>Optional:</strong> try your <code class="inline">/course-outline</code> command on a topic you're teaching next week. It's genuinely useful, and you'll spot improvements to make tomorrow.</li>
+    </ul>
+    <div class="callout">
+      <span class="callout-tag">Tomorrow</span>
+      <p>Day 3 is <strong>context engineering</strong> — why the same prompt gives a poor answer in one project and an excellent one in another — and <strong>working with several agents at once</strong> to build a small business web page, splitting the job between helpers.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ SECTION 9 : COPY-PASTE FILES ============ -->
+  <section class="block">
+    <div class="section-head"><span class="section-index">Section 9</span></div>
+    <h2 class="block-title">The files, ready to copy</h2>
+    <p class="block-lede">Everything you built today, in full. Your agent wrote these for you in the session — these are here so you can recreate them later, share them with a colleague, or fix one that didn't come out right.</p>
+
+    <div class="callout">
+      <span class="callout-tag">Two ways to use this section</span>
+      <p><strong>Let the agent write it</strong> — the quickest route. Say what you want, as you did today.</p>
+      <p><strong>Or copy it yourself</strong> — select the text below, then tell your agent: <code class="inline">create the file .opencode/skills/write-prd/SKILL.md with exactly this content:</code> and paste it. Useful when you want an exact copy.</p>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-tag">Where each one goes</span>
+      <p><strong>Commands</strong> are single files in <code class="inline">.opencode/commands/</code>. <strong>Skills</strong> are folders in <code class="inline">.opencode/skills/</code>, each containing one file called <code class="inline">SKILL.md</code>. The leading dot just means the folder is normally hidden.</p>
+    </div>
+
+    <h3 class="sub-title"><code class="inline">.opencode/commands/course-outline.md</code></h3>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/commands/course-outline.md</span>
+      </div>
+      <div class="window-body">---
+description: Create a short course outline for a topic
+argument-hint: [topic and year group]
+---
+
+# Course Outline
+
+## Topic
+
+$ARGUMENTS
+
+## Produce an outline with these four parts
+
+1. **Who it is for** — one line naming the year group and what they already know.
+2. **Learning outcomes** — 3 to 5 things a student can *do* by the end.
+3. **Sessions** — 4 to 6 sessions, each with a title and one line on what happens in it.
+4. **Check they learned it** — one simple way to assess, no formal exam.
+
+## Rules
+
+- Keep the whole outline to one page.
+- Use plain language a parent could follow — no jargon.
+- Give each session one practical activity rather than a long explanation.
+- If the topic or year group is unclear, ask me before writing.</div>
+    </div>
+
+    <h3 class="sub-title"><code class="inline">.opencode/skills/idea-refine/SKILL.md</code></h3>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/skills/idea-refine/SKILL.md</span>
+      </div>
+      <div class="window-body">---
+name: idea-refine
+description: Refines a rough idea into a sharp, actionable concept by asking questions, exploring options, then converging on one. Use when an idea is still vague, or before committing to a plan.
+---
+
+# Idea Refine
+
+Turns a rough idea into something clear enough to plan.
+
+## How it works
+
+Three phases. Do not skip ahead — the questions are the valuable part.
+
+### 1. Understand and expand
+
+- Restate the idea back in one sentence, so we agree what we are talking about.
+- Ask **3 to 5 sharpening questions**. Cover: who is it for, what does success
+  look like, how long have we got, and what should it deliberately *not* do.
+- **Wait for the answers.** Do not write anything yet.
+
+### 2. Explore and converge
+
+- Offer **two or three genuinely different directions**, not variations of one.
+- For each, say in one line who it suits and what it costs.
+- Recommend one, and say why.
+- Let me choose before continuing.
+
+### 3. Sharpen
+
+Write a one-page summary containing:
+
+- **The idea** — one sentence
+- **Who it is for**
+- **What it includes** — a short list
+- **What it deliberately leaves out** — and why
+- **How we will know it worked**
+
+## Rules
+
+- Never skip the questions, even when the idea sounds clear.
+- Keep the summary to one page.
+- Plain language a parent could follow — no jargon.
+- Always include what we are *not* doing. It is the most useful part.
+
+## Next step
+
+Once the idea is sharp, use the **write-prd** skill to turn it into a
+specification others can work from.</div>
+    </div>
+
+    <h3 class="sub-title"><code class="inline">.opencode/skills/write-prd/SKILL.md</code></h3>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/skills/write-prd/SKILL.md</span>
+      </div>
+      <div class="window-body">---
+name: write-prd
+description: Turns a refined idea into a short PRD - a written agreement saying what we are building, for whom, and what done looks like. Use after the idea is clear and before breaking work into tasks.
+---
+
+# Write PRD
+
+A PRD is a written agreement about what we are building, before anyone starts
+building it. Keep it to one page.
+
+## Before writing
+
+If any of these are unclear, ask me — do not guess:
+
+- Who will use this?
+- What problem does it solve for them?
+- What are we deliberately leaving out?
+
+## Produce a document with exactly these sections
+
+### 1. What we are building
+One sentence. If it needs two, it is not clear enough yet.
+
+### 2. Who it is for
+The actual people — year group, role or audience. Not &quot;users&quot;.
+
+### 3. Why it is worth doing
+The problem it solves, in two or three lines.
+
+### 4. What it must do
+A numbered list. Each requirement must be **checkable** — someone should be able
+to look at the finished thing and say yes or no.
+
+### 5. What we are not doing
+A numbered list, each with a short reason. This section stops the work quietly
+growing.
+
+### 6. How we will know it is done
+Two or three plain checks that prove it works.
+
+## Rules
+
+- One page. If it runs longer, cut requirements, not sections.
+- No vague requirements such as &quot;should be user friendly&quot;.
+- Section 5 is mandatory. A PRD without it is a wish list.
+- Plain language — someone outside the project should be able to follow it.
+
+## Next step
+
+Once the PRD is agreed, use **planning-and-task-breakdown** to turn each
+requirement into small, ordered tasks.</div>
+    </div>
+
+    <h3 class="sub-title"><code class="inline">.opencode/skills/planning-and-task-breakdown/SKILL.md</code></h3>
+    <div class="device-window">
+      <div class="window-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-filename">.opencode/skills/planning-and-task-breakdown/SKILL.md</span>
+      </div>
+      <div class="window-body">---
+name: planning-and-task-breakdown
+description: Breaks work into small ordered tasks with clear acceptance criteria. Use when you have a PRD or clear requirements and need to turn them into steps you can actually start and finish.
+---
+
+# Planning and Task Breakdown
+
+Turns an agreed PRD into tasks small enough to finish and check one at a time.
+
+## How to break the work down
+
+1. Read the PRD&#x27;s requirements. Each one becomes **one or more tasks**.
+2. Put the tasks in the order they must happen — nothing may depend on a task
+   that comes later.
+3. Make each task small enough to finish in one sitting.
+
+## Every task must have
+
+- **A number and a short name** — so we can refer to it
+- **What to do** — one or two plain sentences
+- **How we know it is done** — something you can look at and confirm
+
+## Output format
+
+```
+Task 1 — [short name]
+  Do:    [what happens]
+  Done:  [what you can check]
+```
+
+## Rules
+
+- If a task cannot be checked, it is not a task — rewrite it.
+- If a task feels too big to start, split it in two.
+- Aim for 4 to 8 tasks. More than that usually means the PRD is too big.
+- Do not start building. Produce the list, then stop and let me review it.
+
+## Next step
+
+Work the list one task at a time, confirming each is done before moving on.</div>
+    </div>
+    <div class="analogy">
+      <span class="analogy-tag">Worth knowing</span>
+      <p>Every one of these is an ordinary text file. Nothing is compiled, nothing is installed, and nothing breaks if you edit one. If a skill isn't behaving how you want, open it and change the wording — that is the whole mechanism.</p>
+    </div>
+  </section>
+
+  <footer class="page-footer">Day 2 Student Guide — Building with AI Coding Assistants · Last updated 8 August 2026</footer>
+
+</div>
+
+</body>
+</html>
