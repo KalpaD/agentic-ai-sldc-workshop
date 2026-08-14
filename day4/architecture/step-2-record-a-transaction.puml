@@ -1,0 +1,63 @@
+@startuml step-2-record-a-transaction
+' Task 2 — Record a transaction
+!include _theme.iuml
+
+title Task 2 — Record a transaction
+
+actor "Bakery Owner" as owner
+
+rectangle "**Browser** — localhost:3000" as browser #back:$terraSoft;line:$terracotta {
+  component "$title("index.html")\n$old("the heading")\n$add("a form: date, description")\n$add("category dropdown")\n$add("in / out toggle, amount")\n$badge("2")" as html #back:$white;line:$terracotta
+  component "$title("app.js")\n$add("reads the form")\n$add("Number(amount) — a number, not text")\n$add("POST /transactions")\n$add("clears the form on success")\n$badge("2")" as appjs #back:$white;line:$terracotta
+}
+
+rectangle "**NestJS server** — one process, one port" as server #back:$tealSoft;line:$teal {
+  component "$titleOld("main.ts")\n$old("bootstraps the app")" as main #back:$paperAlt;line:$line
+  component "$title("AppModule")\n$old("TypeOrmModule.forRoot()")\n$old("ServeStaticModule.forRoot()")\n$add("TransactionsModule")\n$badge("2")" as app #back:$white;line:$teal
+  component "$titleOld("ServeStaticModule")\n$old("serves /public")" as static #back:$paperAlt;line:$line
+
+  rectangle "Transactions module" as txmod #back:$paperAlt;line:$teal {
+    component "$title("TransactionsController")\n$add("POST /transactions")\n$badge("2")" as ctrl #back:$white;line:$teal
+    component "$title("TransactionsService")\n$add("rejects an amount that is not")\n$add("a positive whole number")\n$add("saves through the repository")\n$badge("2")" as svc #back:$white;line:$teal
+    component "$title("Transaction entity")\n$add("id · date · description")\n$add("category · type (in / out)")\n$add("amount — integer column")\n$badge("2")" as entity #back:$white;line:$teal
+    component "$title("CATEGORIES")\n$add("Sales · Supplies · Rent")\n$add("Utilities · Transport · Other")\n$add("a fixed list in code, not a table")\n$badge("2")" as cats #back:$white;line:$teal
+  }
+}
+
+rectangle "**Persistence**" as data #back:$goldSoft;line:$gold {
+  component "$titleOld("TypeORM")\n$old("synchronize: true")" as orm #back:$paperAlt;line:$line
+  database "$title("cashflow.sqlite")\n$add("a transaction table, created")\n$add("from the entity at startup")\n$badge("2")" as db #back:$goldSoft;line:$gold
+}
+
+owner --> html : **fills in** the form
+html ..> appjs
+html <-- static : **GET /**
+main --> app : bootstraps
+appjs --> ctrl : **POST /transactions**\n{ date, description, category,\ntype, amount: 5000 }
+ctrl --> svc : delegates
+svc ..> cats : validates category
+svc --> entity : repository.save()
+entity --> orm : mapped by
+orm --> db : INSERT
+
+note as todo #$paperAlt
+  <b>Task 2 — from todo.md</b>
+  ☐ Transaction entity: id, date, description, category, type, amount
+  ☐ amount is stored as a number, not text
+  ☐ POST /transactions saves and returns the record
+  ☐ Form: date, description, category dropdown, in/out toggle, amount
+  ☐ Submitting clears the form and confirms the save
+  ☐ Record survives a server restart
+  --
+  <color:#$terraDeep><b>The check that matters:</b> ask the agent to show</color>
+  <color:#$terraDeep>the saved amount and say whether it is a number</color>
+  <color:#$terraDeep>or a string. Three defences guard it — Number()</color>
+  <color:#$terraDeep>on the page, validation in the service, and an</color>
+  <color:#$terraDeep>integer column in the database.</color>
+end note
+
+todo -[hidden]down- browser
+
+$howToRead()
+
+@enduml

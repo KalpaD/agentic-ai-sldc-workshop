@@ -1,0 +1,62 @@
+@startuml step-4-delete
+' Task 4 — Delete a transaction (stretch)
+!include _theme.iuml
+
+title Task 4 — Delete a transaction   //(stretch)//
+
+actor "Bakery Owner" as owner
+
+rectangle "**Browser** — localhost:3000" as browser #back:$terraSoft;line:$terracotta {
+  component "$title("index.html")\n$old("heading · form · balance · table")\n$add("a delete button in each row")\n$badge("4")" as html #back:$white;line:$terracotta
+  component "$title("app.js")\n$old("Number(amount) · POST · GET")\n$add("DELETE /transactions/:id")\n$add("re-reads the list and the balance")\n$badge("4")" as appjs #back:$white;line:$terracotta
+  component "$titleOld("style.css")\n$old("the table and the balance")" as css #back:$paperAlt;line:$line
+}
+
+rectangle "**NestJS server** — one process, one port" as server #back:$tealSoft;line:$teal {
+  component "$titleOld("main.ts")\n$old("bootstraps the app")" as main #back:$paperAlt;line:$line
+  component "$titleOld("AppModule")\n$old("TypeOrm · ServeStatic · Transactions")" as app #back:$paperAlt;line:$line
+  component "$titleOld("ServeStaticModule")\n$old("serves /public")" as static #back:$paperAlt;line:$line
+
+  rectangle "Transactions module" as txmod #back:$paperAlt;line:$teal {
+    component "$title("TransactionsController")\n$old("POST /transactions")\n$old("GET /transactions · GET /summary")\n$add("DELETE /transactions/:id")\n$badge("4")" as ctrl #back:$white;line:$teal
+    component "$title("TransactionsService")\n$old("validates · findAll() · summary()")\n$add("remove(id)")\n$badge("4")" as svc #back:$white;line:$teal
+    component "$titleOld("Transaction entity")\n$old("id · date · description")\n$old("category · type · amount")" as entity #back:$paperAlt;line:$line
+    component "$titleOld("CATEGORIES")\n$old("a fixed list in code")" as cats #back:$paperAlt;line:$line
+  }
+}
+
+rectangle "**Persistence**" as data #back:$goldSoft;line:$gold {
+  component "$titleOld("TypeORM")\n$old("synchronize: true")" as orm #back:$paperAlt;line:$line
+  database "$titleOld("cashflow.sqlite")\n$old("the transaction table")" as db #back:$paperAlt;line:$line
+}
+
+owner --> html : **removes** a mistyped row
+html ..> appjs
+html ..> css
+html <-- static : **GET /**
+main --> app : bootstraps
+appjs --> ctrl : **POST · GET · GET · DELETE**\nJSON over HTTP
+ctrl --> svc : delegates
+svc ..> cats : validates category
+svc --> entity : repository
+entity --> orm : mapped by
+orm --> db : INSERT · SELECT · DELETE
+
+note as todo #$paperAlt
+  <b>Task 4 — from todo.md</b>
+  ☐ DELETE /transactions/:id
+  ☐ A delete button on each row
+  ☐ The balance updates immediately
+  --
+  <color:#$terraDeep><b>Check:</b> delete the 800 expense —</color>
+  <color:#$terraDeep>the balance moves from 3000 to 3800.</color>
+  --
+  <color:#$inkSoft>Editing is deliberately left out. Delete and</color>
+  <color:#$inkSoft>re-enter is the whole correction path.</color>
+end note
+
+todo -[hidden]down- browser
+
+$howToRead()
+
+@enduml

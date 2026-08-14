@@ -1,0 +1,63 @@
+@startuml step-5-in-vs-out-bars
+' Task 5 — Show in-vs-out as bars (stretch)
+!include _theme.iuml
+
+title Task 5 — Show in-vs-out as bars   //(stretch)//
+
+actor "Bakery Owner" as owner
+
+rectangle "**Browser** — localhost:3000" as browser #back:$terraSoft;line:$terracotta {
+  component "$title("index.html")\n$old("heading · form · balance · table")\n$add("two empty div bars")\n$badge("5")" as html #back:$white;line:$terracotta
+  component "$title("app.js")\n$old("Number(amount) · POST · GET · DELETE")\n$add("sets each bar's width from")\n$add("totalIn and totalOut")\n$badge("5")" as appjs #back:$white;line:$terracotta
+  component "$title("style.css")\n$old("the table and the balance")\n$add("two proportional bars")\n$add("plain divs — no chart library")\n$badge("5")" as css #back:$white;line:$terracotta
+}
+
+rectangle "**NestJS server** — one process, one port" as server #back:$tealSoft;line:$teal {
+  component "$titleOld("main.ts")\n$old("bootstraps the app")" as main #back:$paperAlt;line:$line
+  component "$titleOld("AppModule")\n$old("TypeOrm · ServeStatic · Transactions")" as app #back:$paperAlt;line:$line
+  component "$titleOld("ServeStaticModule")\n$old("serves /public")" as static #back:$paperAlt;line:$line
+
+  rectangle "Transactions module" as txmod #back:$paperAlt;line:$teal {
+    component "$titleOld("TransactionsController")\n$old("POST · GET · GET /summary · DELETE")\n$old("nothing new — /summary already")\n$old("returns the two numbers")" as ctrl #back:$paperAlt;line:$line
+    component "$titleOld("TransactionsService")\n$old("validates · findAll()")\n$old("summary() · remove()")" as svc #back:$paperAlt;line:$line
+    component "$titleOld("Transaction entity")\n$old("id · date · description")\n$old("category · type · amount")" as entity #back:$paperAlt;line:$line
+    component "$titleOld("CATEGORIES")\n$old("a fixed list in code")" as cats #back:$paperAlt;line:$line
+  }
+}
+
+rectangle "**Persistence**" as data #back:$goldSoft;line:$gold {
+  component "$titleOld("TypeORM")\n$old("synchronize: true")" as orm #back:$paperAlt;line:$line
+  database "$titleOld("cashflow.sqlite")\n$old("the transaction table")" as db #back:$paperAlt;line:$line
+}
+
+owner --> html : **sees** money in against money out
+html ..> appjs
+html ..> css
+html <-- static : **GET /**
+main --> app : bootstraps
+appjs --> ctrl : **POST · GET · GET · DELETE**\nJSON over HTTP
+ctrl --> svc : delegates
+svc ..> cats : validates category
+svc --> entity : repository
+entity --> orm : mapped by
+orm --> db : INSERT · SELECT · DELETE
+
+note as todo #$paperAlt
+  <b>Task 5 — from todo.md</b>
+  ☐ Two proportional bars, built from div elements only
+  ☐ Each labelled with its amount
+  ☐ No charting library
+  --
+  <color:#$terraDeep><b>Check:</b> with 5000 in and 2000 out, the "in" bar</color>
+  <color:#$terraDeep>is visibly about two and a half times the "out" bar.</color>
+  --
+  <color:#$inkSoft>The whole task lives in the browser. The server</color>
+  <color:#$inkSoft>gains nothing — GET /summary already returns</color>
+  <color:#$inkSoft>totalIn and totalOut. That is the point.</color>
+end note
+
+todo -[hidden]down- browser
+
+$howToRead()
+
+@enduml

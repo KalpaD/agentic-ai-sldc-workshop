@@ -1,0 +1,63 @@
+@startuml step-3-list-and-balance
+' Task 3 — See the money and the balance
+!include _theme.iuml
+
+title Task 3 — See the money and the balance
+
+actor "Bakery Owner" as owner
+
+rectangle "**Browser** — localhost:3000" as browser #back:$terraSoft;line:$terracotta {
+  component "$title("index.html")\n$old("the heading")\n$old("the form")\n$add("the balance, at the top")\n$add("a table of every transaction")\n$badge("3")" as html #back:$white;line:$terracotta
+  component "$title("app.js")\n$old("Number(amount) · POST")\n$add("GET /transactions → the rows")\n$add("GET /summary → the balance")\n$add("refreshes after every save")\n$badge("3")" as appjs #back:$white;line:$terracotta
+  component "$title("style.css")\n$add("the table and the balance")\n$badge("3")" as css #back:$white;line:$terracotta
+}
+
+rectangle "**NestJS server** — one process, one port" as server #back:$tealSoft;line:$teal {
+  component "$titleOld("main.ts")\n$old("bootstraps the app")" as main #back:$paperAlt;line:$line
+  component "$titleOld("AppModule")\n$old("TypeOrm · ServeStatic · Transactions")" as app #back:$paperAlt;line:$line
+  component "$titleOld("ServeStaticModule")\n$old("serves /public")" as static #back:$paperAlt;line:$line
+
+  rectangle "Transactions module" as txmod #back:$paperAlt;line:$teal {
+    component "$title("TransactionsController")\n$old("POST /transactions")\n$add("GET /transactions")\n$add("GET /summary")\n$badge("3")" as ctrl #back:$white;line:$teal
+    component "$title("TransactionsService")\n$old("validates the amount")\n$add("findAll() — newest first")\n$add("summary() — totalIn, totalOut")\n$add("balance = totalIn − totalOut")\n$badge("3")" as svc #back:$white;line:$teal
+    component "$titleOld("Transaction entity")\n$old("id · date · description")\n$old("category · type · amount")" as entity #back:$paperAlt;line:$line
+    component "$titleOld("CATEGORIES")\n$old("a fixed list in code")" as cats #back:$paperAlt;line:$line
+  }
+}
+
+rectangle "**Persistence**" as data #back:$goldSoft;line:$gold {
+  component "$titleOld("TypeORM")\n$old("synchronize: true")" as orm #back:$paperAlt;line:$line
+  database "$titleOld("cashflow.sqlite")\n$old("the transaction table")" as db #back:$paperAlt;line:$line
+}
+
+owner --> html : **reads** the balance
+html ..> appjs
+html ..> css
+html <-- static : **GET /**
+main --> app : bootstraps
+appjs --> ctrl : **POST · GET · GET**\nJSON over HTTP
+ctrl --> svc : delegates
+svc ..> cats : validates category
+svc --> entity : repository
+entity --> orm : mapped by
+orm --> db : INSERT · SELECT
+
+note as todo #$paperAlt
+  <b>Task 3 — from todo.md</b>
+  ☐ GET /transactions returns all records, newest first
+  ☐ GET /summary returns totalIn, totalOut, balance
+  ☐ A table of transactions on the page
+  ☐ Balance visible at the top, updates after each entry
+  --
+  <color:#$terraDeep><b>Checkpoint:</b> enter the three test transactions —</color>
+  <color:#$terraDeep>5000 in, 1200 out, 800 out. The balance must read 3000.</color>
+  --
+  <color:#$inkSoft>The arithmetic happens in the service and nowhere else.</color>
+  <color:#$inkSoft>The page displays what it is told and never does maths.</color>
+end note
+
+todo -[hidden]down- browser
+
+$howToRead()
+
+@enduml

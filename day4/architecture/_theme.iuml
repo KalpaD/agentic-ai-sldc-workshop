@@ -1,0 +1,123 @@
+' ============================================================
+'  Shared theme for the Cash-Flow Tracker step diagrams
+'  Palette taken from day4-slides.html
+'  Included by every step-N-*.puml — not a diagram on its own.
+' ============================================================
+
+' --- palette (hex without the leading #, so it can be composed) ---
+!$paper      = "F7F1E6"
+!$paperAlt   = "FBF7EF"
+!$white      = "FFFDF8"
+!$ink        = "2A2521"
+!$inkSoft    = "6B6156"
+!$inkFaint   = "9A8F7F"
+!$line       = "E4D9C7"
+
+!$terracotta = "C1592A"
+!$terraDeep  = "9E4620"
+!$terraSoft  = "F0D3C2"
+
+!$teal       = "35706A"
+!$tealSoft   = "D6E6E2"
+
+!$gold       = "C9932F"
+!$goldSoft   = "F5E4C3"
+!$goldInk    = "4A3D22"
+
+' --- caption helpers -------------------------------------------------
+' $add(...)  a line built in THIS task      — dark ink
+' $old(...)  a line already there           — faint ink
+' $badge(N)  the "built in this task" stamp on a box
+' Colour tags must never cross a \n, which is why these exist.
+
+!function $add($text)
+!return "<size:10><color:#" + $ink + ">" + $text + "</color></size>"
+!endfunction
+
+!function $old($text)
+!return "<size:10><color:#" + $inkFaint + ">" + $text + "</color></size>"
+!endfunction
+
+!function $badge($n)
+!return "<size:9><color:#" + $terraDeep + ">● built in Task " + $n + "</color></size>"
+!endfunction
+
+!function $title($text)
+!return "<color:#" + $ink + "><b>" + $text + "</b></color>"
+!endfunction
+
+!function $titleOld($text)
+!return "<color:#" + $inkFaint + "><b>" + $text + "</b></color>"
+!endfunction
+
+' --- skin ------------------------------------------------------------
+skinparam backgroundColor #$paper
+skinparam shadowing false
+skinparam roundCorner 14
+skinparam defaultFontName "Karla"
+skinparam defaultFontColor #$ink
+skinparam defaultTextAlignment center
+skinparam padding 4
+skinparam nodesep 26
+skinparam ranksep 42
+
+skinparam TitleFontName "Fraunces"
+skinparam TitleFontSize 24
+skinparam TitleFontColor #$ink
+
+skinparam ArrowColor #$inkSoft
+skinparam ArrowFontColor #$inkSoft
+skinparam ArrowFontSize 12
+
+skinparam Rectangle {
+  BorderColor #$line
+  BackgroundColor #$paperAlt
+  FontColor #$ink
+  FontSize 14
+  BorderThickness 2
+}
+
+skinparam Component {
+  BorderColor #$line
+  BackgroundColor #$white
+  FontColor #$ink
+  FontSize 13
+}
+
+skinparam Database {
+  BorderColor #$gold
+  BackgroundColor #$goldSoft
+  FontColor #$goldInk
+  FontSize 13
+}
+
+skinparam Actor {
+  BorderColor #$terraDeep
+  BackgroundColor #$terraSoft
+  FontColor #$ink
+  FontSize 13
+}
+
+skinparam Note {
+  BackgroundColor #$paperAlt
+  BorderColor #$line
+  FontColor #$ink
+  FontSize 11
+}
+
+skinparam Legend {
+  BackgroundColor #$paperAlt
+  BorderColor #$line
+  FontColor #$ink
+  FontSize 12
+}
+
+' --- how to read every one of these diagrams -------------------------
+!procedure $howToRead()
+legend right
+  <color:#$terraDeep>■</color> **Solid coloured border** — built in this task
+  <color:#$line>■</color> **Pale border, faint text** — already there
+  ....
+  <color:#$terracotta>■</color> Browser  <color:#$teal>■</color> NestJS  <color:#$gold>■</color> Data
+endlegend
+!endprocedure

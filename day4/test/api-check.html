@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API Check — Cash-Flow Tracker</title>
+<style>
+  :root {
+    --paper: #F7F1E6;
+    --paper-alt: #FBF7EF;
+    --white: #FFFDF8;
+    --ink: #2A2521;
+    --ink-soft: #6B6156;
+    --ink-faint: #9A8F7F;
+    --line: #E4D9C7;
+    --terracotta: #C1592A;
+    --terracotta-deep: #9E4620;
+    --terracotta-soft: #F0D3C2;
+    --teal: #35706A;
+    --teal-soft: #D6E6E2;
+    --gold: #C9932F;
+    --gold-soft: #F5E4C3;
+    --green: #35706A;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 20px 80px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Karla", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 32px;
+    margin: 0 0 6px;
+  }
+  .sub { color: var(--ink-soft); margin: 0 0 28px; }
+  .warn {
+    background: var(--terracotta-soft);
+    border: 2px solid var(--terracotta);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .warn.show { display: block; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 18px;
+  }
+  .card h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 19px;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .method {
+    font-family: ui-monospace, "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: .04em;
+    padding: 3px 9px;
+    border-radius: 6px;
+    color: var(--white);
+  }
+  .get    { background: var(--teal); }
+  .post   { background: var(--terracotta); }
+  .delete { background: var(--terracotta-deep); }
+  .path {
+    font-family: ui-monospace, "JetBrains Mono", monospace;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .why { color: var(--ink-soft); font-size: 14px; margin: 0 0 14px; }
+
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  label { font-size: 13px; color: var(--ink-soft); }
+  input, select, textarea {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper-alt);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  textarea {
+    width: 100%;
+    font-family: ui-monospace, "JetBrains Mono", monospace;
+    font-size: 13px;
+    min-height: 128px;
+    resize: vertical;
+  }
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--teal);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+  button:hover { background: #244E4A; }
+  button.secondary { background: var(--paper-alt); color: var(--ink); border: 1px solid var(--line); }
+  button.secondary:hover { background: var(--line); }
+  button.accent { background: var(--terracotta); }
+  button.accent:hover { background: var(--terracotta-deep); }
+
+  .out {
+    margin-top: 14px;
+    background: var(--paper-alt);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: ui-monospace, "JetBrains Mono", monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--ink-soft);
+    max-height: 340px;
+    overflow: auto;
+  }
+  .status { font-weight: 700; }
+  .ok   { color: var(--teal); }
+  .bad  { color: var(--terracotta-deep); }
+
+  .balance {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 40px;
+    margin: 10px 0 0;
+  }
+  .verdict { font-size: 14px; font-weight: 600; margin-top: 4px; }
+
+  footer {
+    margin-top: 30px;
+    color: var(--ink-faint);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  code { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: .93em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>API Check</h1>
+  <p class="sub">Press a button, read the answer. This page talks to your own server on
+  <code>localhost:3000</code> — nothing is installed, and nothing leaves your laptop.</p>
+
+  <div class="warn" id="originWarning"></div>
+
+  <div class="card">
+    <h2>Before anything else — is your app running?</h2>
+    <p class="why">Every button below sends to <strong id="originShown">this page's own address</strong>.
+    That has to be your NestJS app, or you are talking to the wrong server.</p>
+    <div class="row">
+      <button onclick="checkServer()">Check the server</button>
+    </div>
+    <div class="out" id="pingOut">Not checked yet.</div>
+  </div>
+
+  <!-- ───────────────── POST ───────────────── -->
+  <div class="card">
+    <h2><span class="method post">POST</span> <span class="path">/transactions</span></h2>
+    <p class="why">Records money. Available after <strong>Task 2</strong>.</p>
+
+    <div class="row">
+      <button class="accent" onclick="seedThree()">Add the three test transactions</button>
+      <button class="secondary" onclick="fillOne()">Fill one example</button>
+      <button class="secondary" onclick="fillBad()">Fill a bad amount</button>
+    </div>
+
+    <textarea id="postBody">{
+  "date": "2026-08-14",
+  "description": "Morning bread sales",
+  "category": "Sales",
+  "type": "in",
+  "amount": 5000
+}</textarea>
+
+    <div class="row" style="margin-top:12px">
+      <button onclick="send('POST', '/transactions', 'postOut', document.getElementById('postBody').value, 2)">Send it</button>
+    </div>
+    <div class="out" id="postOut">Nothing sent yet.</div>
+  </div>
+
+  <!-- ───────────────── GET list ───────────────── -->
+  <div class="card">
+    <h2><span class="method get">GET</span> <span class="path">/transactions</span></h2>
+    <p class="why">Every record, newest first. Available after <strong>Task 3</strong>.
+    You can also just type <code>localhost:3000/transactions</code> in the address bar.</p>
+    <div class="row">
+      <button onclick="send('GET', '/transactions', 'listOut', null, 3)">Send it</button>
+    </div>
+    <div class="out" id="listOut">Nothing sent yet.</div>
+  </div>
+
+  <!-- ───────────────── GET summary ───────────────── -->
+  <div class="card">
+    <h2><span class="method get">GET</span> <span class="path">/summary</span></h2>
+    <p class="why">The arithmetic, done on the server. Available after <strong>Task 3</strong>.</p>
+    <div class="row">
+      <button onclick="checkBalance()">Send it and check the balance</button>
+    </div>
+    <p class="balance" id="balanceBig">—</p>
+    <p class="verdict" id="balanceVerdict"></p>
+    <div class="out" id="sumOut">Nothing sent yet.</div>
+  </div>
+
+  <!-- ───────────────── DELETE ───────────────── -->
+  <div class="card">
+    <h2><span class="method delete">DELETE</span> <span class="path">/transactions/:id</span></h2>
+    <p class="why">Removes one record. Available after <strong>Task 4</strong> — a stretch task,
+    so it is fine if this one answers 404.</p>
+    <div class="row">
+      <label for="delId">id</label>
+      <input id="delId" type="number" min="1" value="1" style="width:90px">
+      <button onclick="send('DELETE', '/transactions/' + document.getElementById('delId').value, 'delOut', null, 4)">Send it</button>
+    </div>
+    <div class="out" id="delOut">Nothing sent yet.</div>
+  </div>
+
+  <footer>
+    Every button on this page is one <code>fetch()</code> call — the same thing your app's own
+    page does. The request it sent is printed above each answer, so you can see exactly what
+    went across.
+  </footer>
+
+</div>
+
+<script>
+  const warnBox = document.getElementById('originWarning');
+  const APP_URL = 'http://localhost:3000/api-check.html';
+
+  const HOW_TO_FIX =
+    'Copy this file to <code>public/api-check.html</code> inside your project, ' +
+    'start the app with <code>npm run start:dev</code>, then open ' +
+    '<code>' + APP_URL + '</code>. The page has to be served <em>by the app</em>.';
+
+  // Warn before a single button is pressed if we are plainly on the wrong origin.
+  if (location.protocol === 'file:') {
+    warnBox.innerHTML = '<strong>This page was opened as a file.</strong> ' +
+      'It cannot reach any server from here. ' + HOW_TO_FIX;
+    warnBox.classList.add('show');
+  } else if (location.port !== '3000') {
+    warnBox.innerHTML = '<strong>This page is being served from ' +
+      '<code>' + location.origin + '</code>, which is not your app.</strong> ' +
+      'That is most likely an editor preview. Every button below would go to it ' +
+      'instead of to NestJS. ' + HOW_TO_FIX;
+    warnBox.classList.add('show');
+  }
+  document.getElementById('originShown').textContent =
+    location.protocol === 'file:' ? 'nowhere — this page is a file' : location.origin;
+
+  // Is this answer even from the app? A preview or file server gives itself away.
+  function diagnose(res, text, ct, task) {
+    if (/trusted folder|not a directory|Cannot GET|<!DOCTYPE|<html/i.test(text) ||
+        ct.indexOf('text/html') !== -1) {
+      return 'That answer did not come from NestJS — it came from a file or preview ' +
+             'server, which serves files and knows nothing about /transactions. ' + HOW_TO_FIX;
+    }
+    if (res.status === 404 && task) {
+      return 'Your app is answering, but this endpoint does not exist yet. ' +
+             'It arrives in Task ' + task + '.';
+    }
+    if (res.status === 403) {
+      return 'Something refused the request. If you did not write any security code, ' +
+             'this is not your app answering. ' + HOW_TO_FIX;
+    }
+    return '';
+  }
+
+  // One fetch, printed so you can see what was sent and what came back.
+  async function send(method, path, outId, body, task) {
+    const out = document.getElementById(outId);
+    const sent = method + ' ' + path + (body ? '\n' + body : '');
+    out.innerHTML = 'Sending…\n\n' + escapeHtml(sent);
+
+    try {
+      const res = await fetch(path, {
+        method: method,
+        headers: body ? { 'Content-Type': 'application/json' } : {},
+        body: body || undefined
+      });
+
+      const text = await res.text();
+      const ct = res.headers.get('content-type') || '';
+      let shown = text;
+      try { shown = JSON.stringify(JSON.parse(text), null, 2); } catch (e) { /* not JSON */ }
+
+      const cls = res.ok ? 'ok' : 'bad';
+      const hint = res.ok ? '' : diagnose(res, text, ct, task);
+
+      out.innerHTML =
+        '<span class="status ' + cls + '">' + res.status + ' ' + res.statusText + '</span>\n\n' +
+        '<span class="status">sent</span>\n' + escapeHtml(sent) + '\n\n' +
+        '<span class="status">came back</span>\n' + escapeHtml(shown || '(empty)') +
+        (hint ? '\n\n<span class="status bad">what that means</span>\n' + hint : '');
+
+      return res.ok ? tryParse(text) : null;
+
+    } catch (err) {
+      out.innerHTML =
+        '<span class="status bad">Nothing answered at ' + location.origin + '.</span>\n\n' +
+        'Is the app running? Look in the terminal for <b>npm run start:dev</b>.\n\n' +
+        escapeHtml(String(err));
+      return null;
+    }
+  }
+
+  // Is the Cash-Flow Tracker itself on the other end?
+  async function checkServer() {
+    const out = document.getElementById('pingOut');
+    out.textContent = 'Checking ' + location.origin + ' …';
+
+    if (location.protocol === 'file:') {
+      out.innerHTML = '<span class="status bad">This page is a file, not a web page.</span>\n\n' + HOW_TO_FIX;
+      return;
+    }
+
+    try {
+      const res = await fetch('/');
+      const text = await res.text();
+
+      if (/trusted folder/i.test(text) || res.status === 403) {
+        out.innerHTML = '<span class="status bad">A file or preview server answered, not your app.</span>\n\n' + HOW_TO_FIX;
+      } else if (text.indexOf('Cash-Flow Tracker') !== -1) {
+        out.innerHTML = '<span class="status ok">Your app is answering. Carry on.</span>\n\n' +
+          'GET / returned the Cash-Flow Tracker page from ' + location.origin + '.';
+      } else {
+        out.innerHTML = '<span class="status bad">Something answered, but it is not the Cash-Flow Tracker.</span>\n\n' +
+          'GET / returned ' + res.status + ', and the page did not contain the words ' +
+          '"Cash-Flow Tracker". ' + HOW_TO_FIX;
+      }
+    } catch (err) {
+      out.innerHTML = '<span class="status bad">Nothing is running at ' + location.origin + '.</span>\n\n' +
+        'Start the app with <b>npm run start:dev</b> and try again.';
+    }
+  }
+
+  function tryParse(t) { try { return JSON.parse(t); } catch (e) { return null; } }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const THREE = [
+    { description: 'Morning bread sales', category: 'Sales',     type: 'in',  amount: 5000 },
+    { description: 'Flour and sugar',     category: 'Supplies',  type: 'out', amount: 1200 },
+    { description: 'Electricity',         category: 'Utilities', type: 'out', amount: 800  }
+  ];
+
+  function fillOne() {
+    document.getElementById('postBody').value =
+      JSON.stringify({ date: today, ...THREE[0] }, null, 2);
+  }
+
+  function fillBad() {
+    document.getElementById('postBody').value =
+      JSON.stringify({ date: today, description: 'A bad amount', category: 'Other',
+                       type: 'in', amount: 'abc' }, null, 2);
+  }
+
+  // The checkpoint from todo.md, in one click.
+  async function seedThree() {
+    const out = document.getElementById('postOut');
+    out.textContent = 'Sending three transactions…';
+    const lines = [];
+
+    for (const t of THREE) {
+      const body = JSON.stringify({ date: today, ...t });
+      try {
+        const res = await fetch('/transactions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: body
+        });
+        lines.push((res.ok ? '✓ ' : '✗ ') + res.status + '  ' + t.description +
+                   '  ' + t.type + ' ' + t.amount);
+      } catch (err) {
+        lines.push('✗ could not reach the server  —  ' + t.description);
+      }
+    }
+
+    out.innerHTML = escapeHtml(lines.join('\n')) +
+      '\n\nNow press <b>Send it and check the balance</b> below. It should read 3000.';
+  }
+
+  async function checkBalance() {
+    const data = await send('GET', '/summary', 'sumOut', null, 3);
+    const big = document.getElementById('balanceBig');
+    const verdict = document.getElementById('balanceVerdict');
+
+    if (!data || typeof data.balance === 'undefined') {
+      big.textContent = '—';
+      verdict.textContent = '';
+      return;
+    }
+
+    big.textContent = data.balance;
+
+    // The bug this whole build is designed around: an amount that arrived as text.
+    if (typeof data.balance === 'string') {
+      big.className = 'balance bad';
+      verdict.className = 'verdict bad';
+      verdict.textContent = 'The balance came back as text, not a number. '
+        + 'That is the string-vs-number bug — check Number() on the page, '
+        + 'the validation in the service, and the integer column.';
+    } else if (data.balance === 3000) {
+      big.className = 'balance ok';
+      verdict.className = 'verdict ok';
+      verdict.textContent = '3000 — that is the checkpoint. Your app works.';
+    } else {
+      big.className = 'balance';
+      verdict.className = 'verdict';
+      verdict.textContent = 'Expected 3000 after exactly the three test transactions. '
+        + 'A different number is fine if you have entered others too.';
+    }
+  }
+</script>
+</body>
+</html>

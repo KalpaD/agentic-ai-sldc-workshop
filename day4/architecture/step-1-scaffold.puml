@@ -1,0 +1,46 @@
+@startuml step-1-scaffold
+' Task 1 — Scaffold the project and serve a page
+!include _theme.iuml
+
+title Task 1 — Scaffold the project and serve a page
+
+actor "Bakery Owner" as owner
+
+rectangle "**Browser** — localhost:3000" as browser #back:$terraSoft;line:$terracotta {
+  component "$title("index.html")\n$add("one heading: Cash-Flow Tracker")\n$add("nothing else yet")\n$badge("1")" as html #back:$white;line:$terracotta
+}
+
+rectangle "**NestJS server** — one process, one port" as server #back:$tealSoft;line:$teal {
+  component "$title("main.ts")\n$add("bootstraps the app")\n$add("listens on port 3000")\n$badge("1")" as main #back:$white;line:$teal
+  component "$title("AppModule")\n$add("TypeOrmModule.forRoot()")\n$add("ServeStaticModule.forRoot()")\n$badge("1")" as app #back:$white;line:$teal
+  component "$title("ServeStaticModule")\n$add("serves /public")\n$badge("1")" as static #back:$white;line:$teal
+}
+
+rectangle "**Persistence**" as data #back:$goldSoft;line:$gold {
+  component "$title("TypeORM")\n$add("sqlite driver")\n$add("synchronize: true")\n$badge("1")" as orm #back:$white;line:$gold
+  database "$title("cashflow.sqlite")\n$add("the file appears on first run")\n$add("no tables yet")\n$badge("1")" as db #back:$goldSoft;line:$gold
+}
+
+owner --> html : **opens** localhost:3000
+html <-- static : **GET /**\nreturns the page
+main --> app : bootstraps
+app --> orm : imports
+orm --> db : creates the file
+
+note as todo #$paperAlt
+  <b>Task 1 — from todo.md</b>
+  ☐ NestJS project created
+  ☐ TypeORM connected to cashflow.sqlite
+  ☐ Static files served from /public
+  ☐ npm run start:dev runs with no errors
+  ☐ localhost:3000 shows "Cash-Flow Tracker"
+  --
+  <color:#$inkSoft>No features yet. This task proves the</color>
+  <color:#$inkSoft>skeleton runs before anything is built on it.</color>
+end note
+
+todo -[hidden]down- browser
+
+$howToRead()
+
+@enduml
